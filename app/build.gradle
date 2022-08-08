@@ -1,23 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        release {
-            storeFile file('/Users/adi.matzliah/Downloads/Knox-App-Management/kam_keystore')
-            storePassword 'supercom'
-            keyAlias 'supercom'
-            keyPassword 'supercom'
-        }
-    }
-
-    signingConfigs {
-        release {
-            storeFile file('/Users/adi.matzliah/Downloads/Knox-App-Management/kam_keystore')
-            storePassword 'supercom'
-            keyAlias 'supercom'
-            keyPassword 'supercom'
-        }
-    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.supercom.knox.appmanagement"
@@ -30,26 +13,14 @@ android {
     buildTypes {
 
         debug {
-            debuggable true
             applicationIdSuffix ".dev"
-            versionNameSuffix "-Dev"
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
-/*
-    flavorDimensions "customer"
-
-    productFlavors {
-        dev {
-
-        }
-    }*/
-
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

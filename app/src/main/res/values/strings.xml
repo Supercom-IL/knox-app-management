@@ -58,7 +58,6 @@
     <string name="toggle_force_stop_blacklist">Toggle Force Stop Blacklist</string>
     <string name="toggle_usb_access">Toggle Usb Access</string>
 
-
     <string name="add_or_remove_app_battery_optimization_whitelist">Add/Remove app to/from Battery Optimization Whitelist</string>
     <string name="add_or_remove_app_force_stop_blacklist">Add/Remove app to/from Force Stop Blacklist</string>
     <string name="add_or_remove_app_battery_optimization_whitelist_fail">Failed to add or remove package from whitelist. Error Code: %1$s. Is %2$s now in the battery optimization whitelist: %3$b</string>

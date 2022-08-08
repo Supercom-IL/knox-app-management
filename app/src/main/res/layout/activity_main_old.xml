@@ -67,7 +67,7 @@
                 android:id="@+id/showEnabledPackagesBtn"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/deactivateLicenseBtn"
+                android:layout_below="@+id/activateBackwardsCompatibleKeyBtn"
                 android:layout_alignStart="@+id/activateBackwardsCompatibleKeyBtn"
                 android:text="@string/show_enabled_apps"/>
 
@@ -127,14 +127,6 @@
                 android:layout_alignStart="@+id/activateLicenseBtn"
                 android:text="@string/toggle_usb_access" />
 
-            <Button
-                android:id="@+id/btn_restart_device"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/toggleUsbAccessBtn"
-                android:layout_alignStart="@+id/activateLicenseBtn"
-                android:text="@string/reboot_device" />
-
-        </RelativeLayout>
+       </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
