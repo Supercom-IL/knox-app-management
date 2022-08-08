@@ -65,7 +65,7 @@ public class LicenseReceiver extends BroadcastReceiver {
                     // ELM activated successfully
                     showToast(context, context.getResources().getString(R.string.kpe_activated_succesfully));
                     Log.d("LicenseReceiver", context.getString(R.string.kpe_activated_succesfully));
-                    //disableUsbModes(context);
+                    disableUsbModes(context);
                 } else {
                     // KPE activation failed
                     // Display KPE error message
