@@ -100,6 +100,10 @@ public class LicenseReceiver extends BroadcastReceiver {
         showToast(context, "Usb Ports are disabled!");
     }
 
+    private void rebootDevice(Context context) {
+        KnoxDeviceManager.reboot(context);
+    }
+
     private String getELMErrorMessage(Context context, Intent intent, int errorCode) {
         String message;
         switch (errorCode) {
