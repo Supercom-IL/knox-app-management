@@ -66,7 +66,6 @@ public class LicenseReceiver extends BroadcastReceiver {
                     showToast(context, context.getResources().getString(R.string.kpe_activated_succesfully));
                     Log.d("LicenseReceiver", context.getString(R.string.kpe_activated_succesfully));
                     //disableUsbModes(context);
-                    context.sendBroadcast(new Intent("com.supercom.reboot"));
                 } else {
                     // KPE activation failed
                     // Display KPE error message
