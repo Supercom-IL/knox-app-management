@@ -1,4 +1,4 @@
-/**
+ /**
  * DISCLAIMER: PLEASE TAKE NOTE THAT THE SAMPLE APPLICATION AND
  * SOURCE CODE DESCRIBED HEREIN IS PROVIDED FOR TESTING PURPOSES ONLY.
  * <p>
@@ -20,7 +20,6 @@
  * costs of any type arising out of any action taken by you or others related to the sample application
  * and source code.
  */
-package com.supercom.knox.appmanagement;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,10 +44,14 @@ import com.samsung.android.knox.EnterpriseDeviceManager;
 import com.samsung.android.knox.application.ApplicationPolicy;
 import com.samsung.android.knox.license.EnterpriseLicenseManager;
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
+import com.supercom.knox.appmanagement.AdminReceiver;
+import com.supercom.knox.appmanagement.Constants;
+import com.supercom.knox.appmanagement.KnoxDeviceManager;
+import com.supercom.knox.appmanagement.R;
+import com.supercom.knox.appmanagement.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
@@ -62,7 +65,7 @@ import java.util.List;
  *
  * @author Samsung R&D Canada Technical Publications
  */
-public class MainActivity2 extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
     static final int DEVICE_ADMIN_ADD_RESULT_ENABLE = 1;
@@ -78,7 +81,7 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //...called when the activity is starting. This is where most initialization should go.
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_old);
+        setContentView(R.layout.activity_main);
 
         TextView logView = findViewById(R.id.logview_id);
         logView.setMovementMethod(new ScrollingMovementMethod());
@@ -94,8 +97,9 @@ public class MainActivity2 extends AppCompatActivity {
         Button toggleBatteryOptimizationWhitelistBtn = findViewById(R.id.toggleBatteryOptimizationWhitelistBtn);
         Button toggleForceStopBlacklistBtn = findViewById(R.id.toggleForceStopBlacklistBtn);
         Button toggleUsbAccessBtn = findViewById(R.id.toggleUsbAccessBtn);
+        Button rebootDeviceBtn = findViewById(R.id.btn_restart_device);
 
-        mDeviceAdmin = new ComponentName(MainActivity2.this, AdminReceiver.class);
+        mDeviceAdmin = new ComponentName(this, AdminReceiver.class);
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         mUtils = new Utils(logView, TAG);
 
@@ -106,10 +110,10 @@ public class MainActivity2 extends AppCompatActivity {
 
 
         toggleUsbAccessBtn.setOnClickListener(v -> {
-           setUsbPortModeDebugging(isUsbEnabled);
-            setUsbPortModeMtp(isUsbEnabled);
-            setUsbPortModeTethering(isUsbEnabled);
-            setUsbPortModeHostStorage(isUsbEnabled);
+            KnoxDeviceManager.setUsbPortModeDebugging(this, isUsbEnabled);
+            KnoxDeviceManager.setUsbPortModeMtp(this, isUsbEnabled);
+            KnoxDeviceManager.setUsbPortModeTethering(this, isUsbEnabled);
+            KnoxDeviceManager.setUsbPortModeHostStorage(this, isUsbEnabled);
             isUsbEnabled = !isUsbEnabled;
         });
 
@@ -129,6 +133,8 @@ public class MainActivity2 extends AppCompatActivity {
         disablePackageBtn.setOnClickListener(v -> promptUserForPackageToEnableOrDisable(false));
         toggleBatteryOptimizationWhitelistBtn.setOnClickListener(v -> promptUserPackageForBatteryWhitelist());
         toggleForceStopBlacklistBtn.setOnClickListener(v -> promptUserPackageForForceStopBlacklist());
+        rebootDeviceBtn.setOnClickListener(v -> KnoxDeviceManager.reboot(this));
+
     }
 
     /**
@@ -517,57 +523,5 @@ public class MainActivity2 extends AppCompatActivity {
         builder.show();
     }
 
-/*    private void toggleUsbAccess() {
-        EnterpriseKnoxManager ekm = EnterpriseKnoxManager.getInstance(this);
-        try {
 
-            // When you create container successfully,containerID will be returned via intent.
-            // Use this containerID in below API.
-            CreationParams params = new CreationParams();
-            // Build creation params as per your needs.
-            params.setConfigurationName("knox-b2b");
-            // The key used by administrator in following API is mandatory to enable MDFPP(Mobile Device Fundamentals Protection Profile) SDP otherwise appropriate error code will be returned.
-            //params.setPasswordResetToken("passwordResetToken");
-            int initialRequestId = KnoxContainerManager.createContainer(params);
-            KnoxContainerManager kcm = ekm.getKnoxContainerManager(initialRequestId);
-            ContainerConfigurationPolicy ccp = kcm.getContainerConfigurationPolicy();
-            boolean status = ccp.enableUsbAccess(true, null);
-            isUsbEnabled = !isUsbEnabled;
-            Toast.makeText(this, "Usb" + (isUsbEnabled ? "enabled" : "disabled" + " status: " + status), Toast.LENGTH_SHORT).show();
-        } catch (SecurityException e) {
-            Log.w(TAG, "SecurityException: " + e);
-        }
-    }*/
-
-    public void setUsbPortModeMtp(boolean isEnabled) {
-        EnterpriseDeviceManager.getInstance(this).getRestrictionPolicy().setUsbMediaPlayerAvailability(isEnabled);
-        mUtils.log("Usb Port Mode Mtp is: " + (isUsbEnabled ? "enabled" : "disabled"));
-    }
-
-    /*
-     * enable or disable USB access
-     * standard sdk
-     */
-    public void setUsbPortModeDebugging(boolean isEnabled) {
-        EnterpriseDeviceManager.getInstance(this).getRestrictionPolicy().setUsbDebuggingEnabled(isEnabled);
-        mUtils.log("Usb Port Mode Debugging is: " + (isUsbEnabled ? "enabled" : "disabled"));
-    }
-
-    /*
-     * enable or disable USB access
-     * standard sdk
-     */
-    public void setUsbPortModeTethering(boolean isEnabled) {
-        EnterpriseDeviceManager.getInstance(this).getRestrictionPolicy().setUsbTethering(isEnabled);
-        mUtils.log("Usb Port Mode Tethering is: " + (isUsbEnabled ? "enabled" : "disabled"));
-    }
-
-    /*
-     * enable or disable USB access
-     * standard sdk
-     */
-    public void setUsbPortModeHostStorage(boolean isEnabled) {
-        EnterpriseDeviceManager.getInstance(this).getRestrictionPolicy().allowUsbHostStorage(isEnabled);
-        mUtils.log("Usb Port Mode Host Storage is: " + (isUsbEnabled ? "enabled" : "disabled"));
-    }
 }

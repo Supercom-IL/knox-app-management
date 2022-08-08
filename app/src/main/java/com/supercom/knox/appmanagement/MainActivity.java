@@ -32,7 +32,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
-import com.samsung.android.knox.EnterpriseDeviceManager;
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 
 
@@ -130,25 +129,4 @@ public class MainActivity extends AppCompatActivity {
         utils.log(getResources().getString(R.string.license_progress));
     }
 
-/*    private void toggleUsbAccess() {
-        EnterpriseKnoxManager ekm = EnterpriseKnoxManager.getInstance(this);
-        try {
-
-            // When you create container successfully,containerID will be returned via intent.
-            // Use this containerID in below API.
-            CreationParams params = new CreationParams();
-            // Build creation params as per your needs.
-            params.setConfigurationName("knox-b2b");
-            // The key used by administrator in following API is mandatory to enable MDFPP(Mobile Device Fundamentals Protection Profile) SDP otherwise appropriate error code will be returned.
-            //params.setPasswordResetToken("passwordResetToken");
-            int initialRequestId = KnoxContainerManager.createContainer(params);
-            KnoxContainerManager kcm = ekm.getKnoxContainerManager(initialRequestId);
-            ContainerConfigurationPolicy ccp = kcm.getContainerConfigurationPolicy();
-            boolean status = ccp.enableUsbAccess(true, null);
-            isUsbEnabled = !isUsbEnabled;
-            Toast.makeText(this, "Usb" + (isUsbEnabled ? "enabled" : "disabled" + " status: " + status), Toast.LENGTH_SHORT).show();
-        } catch (SecurityException e) {
-            Log.w(TAG, "SecurityException: " + e);
-        }
-    }*/
 }
