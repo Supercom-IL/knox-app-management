@@ -20,7 +20,7 @@
  * costs of any type arising out of any action taken by you or others related to the sample application
  * and source code.
  */
-package com.supercom.knox.appmanagement;
+package com.supercom.knox.appmanagement.license;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 import com.samsung.android.knox.license.EnterpriseLicenseManager;
+import com.supercom.knox.appmanagement.KnoxDeviceManager;
+import com.supercom.knox.appmanagement.R;
 
 /**
  * @author Samsung R&D Canada Technical Publications
@@ -63,7 +65,8 @@ public class LicenseReceiver extends BroadcastReceiver {
                     // ELM activated successfully
                     showToast(context, context.getResources().getString(R.string.kpe_activated_succesfully));
                     Log.d("LicenseReceiver", context.getString(R.string.kpe_activated_succesfully));
-                    disableUsbModes(context);
+                    //disableUsbModes(context);
+                    context.sendBroadcast(new Intent("com.supercom.reboot"));
                 } else {
                     // KPE activation failed
                     // Display KPE error message
