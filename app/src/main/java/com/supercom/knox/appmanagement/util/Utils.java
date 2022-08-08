@@ -1,4 +1,4 @@
-package com.supercom.knox.appmanagement;
+package com.supercom.knox.appmanagement.util;
 
 import android.util.Log;
 import android.widget.TextView;
