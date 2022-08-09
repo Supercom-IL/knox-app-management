@@ -7,11 +7,13 @@ import android.util.Log;
 
 import com.supercom.knox.appmanagement.KnoxDeviceManager;
 
+import timber.log.Timber;
+
 public class RebootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("RebootReceiver","onReceive");
+        Timber.i("RebootReceiver onReceive()");
         KnoxDeviceManager.reboot(context);
     }
 }
