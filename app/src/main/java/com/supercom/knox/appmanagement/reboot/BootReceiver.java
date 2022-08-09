@@ -16,7 +16,7 @@ public class BootReceiver extends BroadcastReceiver {
         try {
             KnoxDeviceManager.setAllowPowerOffAndRestart(context, false); // prevent the user from rebooting the device once the boot is completed
         } catch (Exception e) {
-            Timber.e("setAllowPowerOffAndRestart is failed: %s", e.getMessage());
+            Timber.e("disable PowerOffAndRestart is failed: %s", e.getMessage());
         }
         context.registerReceiver(new RebootReceiver(),new IntentFilter("com.supercom.reboot"));
     }
