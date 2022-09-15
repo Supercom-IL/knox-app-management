@@ -98,6 +98,8 @@ public class LicenseReceiver extends BroadcastReceiver {
         KnoxDeviceManager.setUsbPortModeHostStorage(context, false);
         //KnoxDeviceManager.setAllowPowerOffAndRestart(context, false);
         showToast(context, "Usb Ports are disabled!");
+        KnoxDeviceManager.setMobileDataRoamingState(context, true);
+        showToast(context, "Set 'data roaming state' enable!");
     }
 
     private void rebootDevice(Context context) {
