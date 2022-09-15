@@ -1,4 +1,4 @@
-package com.supercom.knox.appmanagement;
+package com.supercom.knox.appmanagement.util;
 /*
  * DISCLAIMER: PLEASE TAKE NOTE THAT THE SAMPLE APPLICATION AND
  * SOURCE CODE DESCRIBED HEREIN IS PROVIDED FOR TESTING PURPOSES ONLY.

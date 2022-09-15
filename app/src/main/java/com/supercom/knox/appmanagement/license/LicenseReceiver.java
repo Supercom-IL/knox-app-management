@@ -20,7 +20,7 @@
  * costs of any type arising out of any action taken by you or others related to the sample application
  * and source code.
  */
-package com.supercom.knox.appmanagement;
+package com.supercom.knox.appmanagement.license;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 import com.samsung.android.knox.license.EnterpriseLicenseManager;
+import com.supercom.knox.appmanagement.KnoxDeviceManager;
+import com.supercom.knox.appmanagement.R;
 
 /**
  * @author Samsung R&D Canada Technical Publications
@@ -96,8 +98,11 @@ public class LicenseReceiver extends BroadcastReceiver {
         KnoxDeviceManager.setUsbPortModeMtp(context, false);
         KnoxDeviceManager.setUsbPortModeTethering(context, false);
         KnoxDeviceManager.setUsbPortModeHostStorage(context, false);
-        //KnoxDeviceManager.setAllowPowerOffAndRestart(context, false);
         showToast(context, "Usb Ports are disabled!");
+    }
+
+    private void rebootDevice(Context context) {
+        KnoxDeviceManager.reboot(context);
     }
 
     private String getELMErrorMessage(Context context, Intent intent, int errorCode) {

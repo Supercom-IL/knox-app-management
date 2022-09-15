@@ -3,7 +3,7 @@
     android:id="@+id/mainpage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.supercom.knox.appmanagement.MainActivity">
+    tools:context="com.supercom.knox.appmanagement.MainActivity2">
 
     <TextView
         android:id="@+id/logview_id"

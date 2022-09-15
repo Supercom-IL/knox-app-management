@@ -44,4 +44,9 @@ public class KnoxDeviceManager {
     public static void setAllowPowerOffAndRestart(Context context, boolean isEnabled) throws SecurityException {
         EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().allowPowerOff(isEnabled);
     }
+
+    public static void reboot(Context context) throws SecurityException {
+        setAllowPowerOffAndRestart(context, true);
+        EnterpriseDeviceManager.getInstance(context).getPasswordPolicy().reboot("reboot device");
+    }
 }
