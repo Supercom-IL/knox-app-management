@@ -22,7 +22,7 @@
  */
 
 
-package com.supercom.knox.appmanagement;
+package com.supercom.knox.appmanagement.admin;
 
 import android.app.admin.DeviceAdminReceiver;
 import android.content.Context;
