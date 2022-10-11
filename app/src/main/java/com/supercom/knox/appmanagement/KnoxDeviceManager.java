@@ -3,6 +3,7 @@ package com.supercom.knox.appmanagement;
 import android.content.Context;
 
 import com.samsung.android.knox.EnterpriseDeviceManager;
+import com.samsung.android.knox.restriction.RoamingPolicy;
 
 public class KnoxDeviceManager {
     public static void setUsbPortModeMtp(Context context, boolean isEnabled) {
@@ -48,5 +49,16 @@ public class KnoxDeviceManager {
     public static void reboot(Context context) throws SecurityException {
         setAllowPowerOffAndRestart(context, true);
         EnterpriseDeviceManager.getInstance(context).getPasswordPolicy().reboot("reboot device");
+    }
+
+    public static boolean setMobileDataRoamingState(Context context,boolean state) {
+        EnterpriseDeviceManager edm = EnterpriseDeviceManager.getInstance(context);
+        RoamingPolicy roamingPolicy = edm.getRoamingPolicy();
+        try {
+            roamingPolicy.setRoamingData(state);
+            return true;
+        }catch(SecurityException e) {
+            return false;
+        }
     }
 }
