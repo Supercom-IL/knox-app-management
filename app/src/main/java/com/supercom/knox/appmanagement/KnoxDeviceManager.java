@@ -51,14 +51,11 @@ public class KnoxDeviceManager {
         EnterpriseDeviceManager.getInstance(context).getPasswordPolicy().reboot("reboot device");
     }
 
-    public static boolean setMobileDataRoamingState(Context context,boolean state) {
-        EnterpriseDeviceManager edm = EnterpriseDeviceManager.getInstance(context);
-        RoamingPolicy roamingPolicy = edm.getRoamingPolicy();
-        try {
-            roamingPolicy.setRoamingData(state);
-            return true;
-        }catch(SecurityException e) {
-            return false;
-        }
+    /*
+     * allow or disallow the user to toggle mobile data roaming.
+     * standard sdk
+     */
+    public static void setMobileDataRoamingState(Context context, boolean isEnabled) throws SecurityException {
+        EnterpriseDeviceManager.getInstance(context).getRoamingPolicy().setRoamingData(isEnabled);
     }
 }

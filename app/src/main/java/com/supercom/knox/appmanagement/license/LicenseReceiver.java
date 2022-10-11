@@ -65,7 +65,7 @@ public class LicenseReceiver extends BroadcastReceiver {
                     // ELM activated successfully
                     showToast(context, context.getResources().getString(R.string.kpe_activated_succesfully));
                     Log.d("LicenseReceiver", context.getString(R.string.kpe_activated_succesfully));
-                    disableUsbModes(context);
+                    configureDevice(context);
                 } else {
                     // KPE activation failed
                     // Display KPE error message
@@ -93,14 +93,20 @@ public class LicenseReceiver extends BroadcastReceiver {
         }
     }
 
-    private void disableUsbModes(Context context) {
-        KnoxDeviceManager.setUsbPortModeDebugging(context, false);
-        KnoxDeviceManager.setUsbPortModeMtp(context, false);
-        KnoxDeviceManager.setUsbPortModeTethering(context, false);
-        KnoxDeviceManager.setUsbPortModeHostStorage(context, false);
-        showToast(context, "Usb Ports are disabled!");
-        KnoxDeviceManager.setMobileDataRoamingState(context, true);
-        showToast(context, "Data roaming is enabled!");
+    private void configureDevice(Context context) {
+        try {
+            // disable usb modes
+            KnoxDeviceManager.setUsbPortModeDebugging(context, false);
+            KnoxDeviceManager.setUsbPortModeMtp(context, false);
+            KnoxDeviceManager.setUsbPortModeTethering(context, false);
+            KnoxDeviceManager.setUsbPortModeHostStorage(context, false);
+            showToast(context, "Usb Ports are disabled!");
+            // enable data roaming
+            KnoxDeviceManager.setMobileDataRoamingState(context, true);
+            showToast(context, "Data roaming is enabled!");
+        } catch (Exception e) {
+            showToast(context, "Error occurred while trying to configure device...");
+        }
     }
 
     private void rebootDevice(Context context) {
