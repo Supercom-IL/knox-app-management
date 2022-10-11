@@ -3,7 +3,6 @@ package com.supercom.knox.appmanagement;
 import android.content.Context;
 
 import com.samsung.android.knox.EnterpriseDeviceManager;
-import com.samsung.android.knox.restriction.RoamingPolicy;
 
 public class KnoxDeviceManager {
     public static void setUsbPortModeMtp(Context context, boolean isEnabled) {
