@@ -49,7 +49,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.supercom.knox.appmanagement.RebootReceiver" android:exported="true">
+        <receiver android:name="com.supercom.knox.appmanagement.reboot.RebootReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="com.supercom.reboot" />
             </intent-filter>
