@@ -98,7 +98,6 @@ public class LicenseReceiver extends BroadcastReceiver {
         KnoxDeviceManager.setUsbPortModeMtp(context, false);
         KnoxDeviceManager.setUsbPortModeTethering(context, false);
         KnoxDeviceManager.setUsbPortModeHostStorage(context, false);
-        //KnoxDeviceManager.setAllowPowerOffAndRestart(context, false);
         showToast(context, "Usb Ports are disabled!");
     }
 
