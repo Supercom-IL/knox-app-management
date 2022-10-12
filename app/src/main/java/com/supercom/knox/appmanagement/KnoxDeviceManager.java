@@ -18,7 +18,13 @@ public class KnoxDeviceManager {
         EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().setUsbDebuggingEnabled(isEnabled);
         //utils.log("Usb Port Mode Debugging is: " + (isEnabled ? "enabled" : "disabled"));
     }
-
+    public static Boolean isUsbDebuggingEnabled(Context context) {
+        try {
+            return EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isUsbDebuggingEnabled();
+        }catch (Exception ex){
+            return null;
+        }
+    }
     /*
      * enable or disable USB access
      * standard sdk
@@ -56,5 +62,12 @@ public class KnoxDeviceManager {
      */
     public static void setMobileDataRoamingState(Context context, boolean isEnabled) throws SecurityException {
         EnterpriseDeviceManager.getInstance(context).getRoamingPolicy().setRoamingData(isEnabled);
+    }
+    public static Boolean isRoamingDataEnabled(Context context)  {
+        try {
+            return EnterpriseDeviceManager.getInstance(context).getRoamingPolicy().isRoamingDataEnabled();
+        }catch (Exception ex){
+            return null;
+        }
     }
 }

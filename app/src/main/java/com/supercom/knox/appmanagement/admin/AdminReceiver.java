@@ -27,21 +27,20 @@ package com.supercom.knox.appmanagement.admin;
 import android.app.admin.DeviceAdminReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.supercom.knox.appmanagement.StatusManager;
 
 public class AdminReceiver extends DeviceAdminReceiver {
 
-    void showToast(Context context, CharSequence msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onEnabled(Context context, Intent intent) {
-        showToast(context, "Device admin enabled");
+         StatusManager.getInstance(context).setAdminEnabled(true);
     }
 
     @Override
     public void onDisabled(Context context, Intent intent) {
-        showToast(context, "Device admin disabled");
+        StatusManager.getInstance(context).setAdminEnabled(false);
     }
 }

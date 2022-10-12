@@ -37,6 +37,8 @@ import com.supercom.knox.appmanagement.admin.AdminReceiver;
 import com.supercom.knox.appmanagement.util.Constants;
 import com.supercom.knox.appmanagement.util.Utils;
 
+import java.util.ArrayList;
+
 
 /**
  * This activity displays the main UI of the application. This is a simple application to enable
@@ -49,11 +51,11 @@ import com.supercom.knox.appmanagement.util.Utils;
  *
  * @author Samsung R&D Canada Technical Publications
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements StatusManager.StatusInterface {
 
     private final String TAG = "MainActivity";
     static final int DEVICE_ADMIN_ADD_RESULT_ENABLE = 1;
-
+ArrayList<String> messages;
     private ComponentName deviceAdmin;
     private DevicePolicyManager devicePolicyManager;
     private Utils utils;
@@ -63,12 +65,15 @@ public class MainActivity extends AppCompatActivity {
         //...called when the activity is starting. This is where most initialization should go.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        messages=new ArrayList<>();
 
         TextView logView = findViewById(R.id.logview_id);
         logView.setMovementMethod(new ScrollingMovementMethod());
 
         deviceAdmin = new ComponentName(MainActivity.this, AdminReceiver.class);
         devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        StatusManager.getInstance(getApplicationContext()).adminEnabled=devicePolicyManager.isAdminActive(deviceAdmin);
+        StatusManager.getInstance(getApplicationContext()).setListener(this);
         utils = new Utils(logView, TAG);
 
         activateAdmin();
@@ -130,6 +135,40 @@ public class MainActivity extends AppCompatActivity {
         licenseManager.activateLicense(Constants.KPE_LICENSE_KEY);
         utils.log(getResources().getString(R.string.license_progress));
     }
+
+    @Override
+    public void onStatusChange() {
+        initText();
+    }
+
+    private void initText() {
+        TextView logview_id2 = findViewById(R.id.logview_id2);
+        logview_id2.clearComposingText();
+        logview_id2.setText("");
+
+        if (StatusManager.getInstance(getApplicationContext()).adminEnabled==true) {
+            logview_id2.append(getResources().getString(R.string.admin_activated));
+        }else{
+            logview_id2.append(getResources().getString(R.string.admin_inactivated));
+        }
+
+        if(StatusManager.getInstance(getApplicationContext()).disabledUSBPort ==true){
+            logview_id2.append("Usb Port Modes: Mtp,Debugging,Tethering,Host Storage are disabled!");
+        }else{
+            logview_id2.append("Usb Port is enabled");
+        }
+
+        if(StatusManager.getInstance(getApplicationContext()).enabledMobileDataRoaming ==true){
+            logview_id2.append("mobileDataRoaming is enabled");
+        }else{
+            logview_id2.append("mobileDataRoaming is disabled");
+        }
+
+        for (String m:messages){
+            logview_id2.append(m);
+        }
+    }
+
 
 /*    private void toggleUsbAccess() {
         EnterpriseKnoxManager ekm = EnterpriseKnoxManager.getInstance(this);

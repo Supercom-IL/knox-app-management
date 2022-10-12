@@ -17,6 +17,9 @@ public class Utils {
         mTag = className;
     }
 
+    public void clear() {
+        mTextView.setText("");
+    }
     /** Log results to a textView in application UI */
     public void log(String text) {
         mTextView.append(text);

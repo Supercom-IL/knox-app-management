@@ -25,13 +25,10 @@ package com.supercom.knox.appmanagement.license;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
-import com.samsung.android.knox.license.EnterpriseLicenseManager;
-import com.supercom.knox.appmanagement.KnoxDeviceManager;
 import com.supercom.knox.appmanagement.R;
+import com.supercom.knox.appmanagement.StatusManager;
 
 /**
  * @author Samsung R&D Canada Technical Publications
@@ -41,21 +38,17 @@ public class LicenseReceiver extends BroadcastReceiver {
 
     private static final int DEFAULT_ERROR_CODE = -1;
 
-    private void showToast(Context context, String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
 
         if (intent == null) {
             // No intent action is available
-            showToast(context, context.getResources().getString(R.string.no_intent));
+            StatusManager.getInstance(context).setActiveLicense(false,context.getResources().getString(R.string.no_intent));
         } else {
             String action = intent.getAction();
             if (action == null) {
                 // No intent action is available
-                showToast(context, context.getResources().getString(R.string.no_intent_action));
+                StatusManager.getInstance(context).setActiveLicense(false,context.getResources().getString(R.string.no_intent_action));
             } else if (action.equals(KnoxEnterpriseLicenseManager.ACTION_LICENSE_STATUS)) {
                 // ELM activation result Intent is obtained
                 int errorCode = intent.getIntExtra(
@@ -63,107 +56,15 @@ public class LicenseReceiver extends BroadcastReceiver {
 
                 if (errorCode == KnoxEnterpriseLicenseManager.ERROR_NONE) {
                     // ELM activated successfully
-                    showToast(context, context.getResources().getString(R.string.kpe_activated_succesfully));
-                    Log.d("LicenseReceiver", context.getString(R.string.kpe_activated_succesfully));
-                    configureDevice(context);
+                    StatusManager.getInstance(context).setActiveLicense(true,context.getResources().getString(R.string.kpe_activated_succesfully));
                 } else {
                     // KPE activation failed
                     // Display KPE error message
                     String errorMessage = getKPEErrorMessage(context, intent, errorCode);
-                    showToast(context, errorMessage);
-                    Log.d("LicenseReceiver", errorMessage);
-                }
-            } else if (action.equals(EnterpriseLicenseManager.ACTION_LICENSE_STATUS)) {
-                // Backwards-compatible key activation result Intent is obtained
-                int errorCode = intent.getIntExtra(
-                        EnterpriseLicenseManager.EXTRA_LICENSE_ERROR_CODE, DEFAULT_ERROR_CODE);
-
-                if (errorCode == EnterpriseLicenseManager.ERROR_NONE) {
-                    // Backwards-compatible key activated successfully
-                    showToast(context, context.getResources().getString(R.string.elm_action_successful));
-                    Log.d("LicenseReceiver", context.getString(R.string.elm_action_successful));
-                } else {
-                    // Backwards-compatible key activation failed
-                    // Display backwards-compatible key error message
-                    String errorMessage = getELMErrorMessage(context, intent, errorCode);
-                    showToast(context, errorMessage);
-                    Log.d("LicenseReceiver", errorMessage);
-                }
+                    StatusManager.getInstance(context).setActiveLicense(false,errorMessage);
+                 }
             }
         }
-    }
-
-    private void configureDevice(Context context) {
-        try {
-            // disable usb modes
-            KnoxDeviceManager.setUsbPortModeDebugging(context, false);
-            KnoxDeviceManager.setUsbPortModeMtp(context, false);
-            KnoxDeviceManager.setUsbPortModeTethering(context, false);
-            KnoxDeviceManager.setUsbPortModeHostStorage(context, false);
-            showToast(context, "Usb Ports are disabled!");
-            // enable data roaming
-            KnoxDeviceManager.setMobileDataRoamingState(context, true);
-            showToast(context, "Data roaming is enabled!");
-        } catch (Exception e) {
-            showToast(context, "Error occurred while trying to configure device...");
-        }
-    }
-
-    private void rebootDevice(Context context) {
-        KnoxDeviceManager.reboot(context);
-    }
-
-    private String getELMErrorMessage(Context context, Intent intent, int errorCode) {
-        String message;
-        switch (errorCode) {
-            case EnterpriseLicenseManager.ERROR_INTERNAL:
-                message = context.getResources().getString(R.string.err_elm_internal);
-                break;
-            case EnterpriseLicenseManager.ERROR_INTERNAL_SERVER:
-                message = context.getResources().getString(R.string.err_elm_internal_server);
-                break;
-            case EnterpriseLicenseManager.ERROR_INVALID_LICENSE:
-                message = context.getResources().getString(R.string.err_elm_licence_invalid_license);
-                break;
-            case EnterpriseLicenseManager.ERROR_INVALID_PACKAGE_NAME:
-                message = context.getResources().getString(R.string.err_elm_invalid_package_name);
-                break;
-            case EnterpriseLicenseManager.ERROR_LICENSE_TERMINATED:
-                message = context.getResources().getString(R.string.err_elm_licence_terminated);
-                break;
-            case EnterpriseLicenseManager.ERROR_NETWORK_DISCONNECTED:
-                message = context.getResources().getString(R.string.err_elm_network_disconnected);
-                break;
-            case EnterpriseLicenseManager.ERROR_NETWORK_GENERAL:
-                message = context.getResources().getString(R.string.err_elm_network_general);
-                break;
-            case EnterpriseLicenseManager.ERROR_NOT_CURRENT_DATE:
-                message = context.getResources().getString(R.string.err_elm_not_current_date);
-                break;
-            case EnterpriseLicenseManager.ERROR_NULL_PARAMS:
-                message = context.getResources().getString(R.string.err_elm_null_params);
-                break;
-            case EnterpriseLicenseManager.ERROR_SIGNATURE_MISMATCH:
-                message = context.getResources().getString(R.string.err_elm_sig_mismatch);
-                break;
-            case EnterpriseLicenseManager.ERROR_UNKNOWN:
-                message = context.getResources().getString(R.string.err_elm_unknown);
-                break;
-            case EnterpriseLicenseManager.ERROR_USER_DISAGREES_LICENSE_AGREEMENT:
-                message = context.getResources().getString(R.string.err_elm_user_disagrees_license_agreement);
-                break;
-            case EnterpriseLicenseManager.ERROR_VERSION_CODE_MISMATCH:
-                message = context.getResources().getString(R.string.err_elm_ver_code_mismatch);
-                break;
-
-            default:
-                // Unknown error code
-                String errorStatus = intent.getStringExtra(
-                        EnterpriseLicenseManager.EXTRA_LICENSE_STATUS);
-                message = context.getResources()
-                        .getString(R.string.err_elm_code_unknown, Integer.toString(errorCode), errorStatus);
-        }
-        return message;
     }
 
     private String getKPEErrorMessage(Context context, Intent intent, int errorCode) {
