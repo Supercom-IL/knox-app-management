@@ -83,7 +83,7 @@
        app:layout_constraintBottom_toBottomOf="parent"
        android:onClick="onActivateClick"
        android:layout_width="0dp"
-       android:drawableStart="@drawable/activate_ok"
+       android:layout_margin="10dp"
        android:text="Activate"
        android:layout_height="wrap_content"/>
 
@@ -104,5 +104,5 @@
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintBottom_toBottomOf="@id/tv_mobile_data_roaming"
        android:layout_width="0dp"
-       android:layout_height="0dp"/>
+        android:layout_height="0dp"/>
 </android.support.constraint.ConstraintLayout>
