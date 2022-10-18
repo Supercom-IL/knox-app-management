@@ -71,8 +71,8 @@ public class StatusManager {
                 }
                 enabledMobileDataRoaming = KnoxDeviceManager.isRoamingDataEnabled(context);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
