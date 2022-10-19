@@ -68,11 +68,10 @@ Button btn_activate,btn_deactivate;
         tv_log.clearComposingText();
         tv_log.setText("");
 
-        for (int i=manager.messages.size()-1;i>=0;i--){
-            String m=manager.messages.get(i);
+        for (int i=manager.messages.size()-1;i>=0;i--) {
+            String m = manager.messages.get(i);
             tv_log.append(m);
             tv_log.append("\n");
-
         }
 
        btn_activate.setEnabled(!manager.isActiveLicense());
