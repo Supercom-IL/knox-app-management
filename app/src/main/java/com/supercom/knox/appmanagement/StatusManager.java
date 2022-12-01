@@ -9,6 +9,7 @@ import android.content.Intent;
 import com.samsung.android.knox.license.ActivationInfo;
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 import com.supercom.knox.appmanagement.admin.AdminReceiver;
+import com.supercom.knox.appmanagement.application.App;
 import com.supercom.knox.appmanagement.util.Constants;
 
 import java.util.ArrayList;
@@ -155,7 +156,7 @@ public class StatusManager {
 
     private void configureDevice() {
         try {
-            if (!BuildConfig.DEBUG) {
+            if (!BuildConfig.DEBUG && !App.isIgnoreUSBBlock()) {
                 disableUsbModes(context);
             }
 

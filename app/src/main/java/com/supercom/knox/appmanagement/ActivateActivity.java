@@ -1,7 +1,9 @@
 package com.supercom.knox.appmanagement;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.supercom.knox.appmanagement.application.App;
 import com.supercom.knox.appmanagement.application.AppService;
 
 public class ActivateActivity extends AppCompatActivity implements StatusManager.StatusInterface {
@@ -65,34 +68,40 @@ Button btn_activate,btn_deactivate;
     }
 
     private void initUI() {
-        StatusManager manager=StatusManager.getInstance(getApplicationContext());
+        StatusManager manager = StatusManager.getInstance(getApplicationContext());
 
         tv_log.clearComposingText();
         tv_log.setText("");
 
-        for (int i=manager.messages.size()-1;i>=0;i--) {
+        for (int i = manager.messages.size() - 1; i >= 0; i--) {
             String m = manager.messages.get(i);
             tv_log.append(m);
             tv_log.append("\n");
         }
 
-       btn_activate.setEnabled(!manager.isActiveLicense());
-       btn_deactivate.setEnabled(false);//manager.isActiveLicense());
+        btn_activate.setEnabled(!manager.isActiveLicense());
+        btn_deactivate.setEnabled(false);//manager.isActiveLicense());
 
-        tv_admin.setEnabled(manager.adminEnabled!= null);
-        tv_activate.setEnabled(manager.activeLicense!= null);
-        tv_usb.setEnabled(manager.disabledUSBPort != null);
-        tv_mobile_data_roaming.setEnabled(manager.enabledMobileDataRoaming != null);
+        if (App.isIgnoreUSBBlock()) {
+            tv_usb.setEnabled(false);
+            tv_usb.setChecked(false);
+            tv_usb.setText("\tDisabled USB Plugin not required");
+            Drawable img = ContextCompat.getDrawable(this, R.drawable.activate_not_required);
+            img.setBounds(0, 0, 60, 60);
+            tv_usb.setCompoundDrawables(img, null, null, null);
+        } else {
+            tv_usb.setEnabled(manager.disabledUSBPort != null);
+            tv_usb.setChecked(manager.isUsbEnabled());
+        }
 
+        tv_admin.setEnabled(manager.adminEnabled != null);
         tv_admin.setChecked(manager.isAdminEnabled());
+
+        tv_activate.setEnabled(manager.activeLicense != null);
         tv_activate.setChecked(manager.isActiveLicense());
-        tv_usb.setChecked(manager.isUsbEnabled());
-        tv_mobile_data_roaming.setChecked(manager.isDataRoamingEnabled());
 
-
-        tv_activate.setEnabled(manager.activeLicense!= null);
-        tv_usb.setEnabled(manager.disabledUSBPort != null);
         tv_mobile_data_roaming.setEnabled(manager.enabledMobileDataRoaming != null);
+        tv_mobile_data_roaming.setChecked(manager.isDataRoamingEnabled());
     }
 
     public void onActivateClick(View view) {
