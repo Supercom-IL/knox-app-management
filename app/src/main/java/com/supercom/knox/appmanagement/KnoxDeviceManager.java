@@ -48,7 +48,7 @@ public class KnoxDeviceManager {
      * standard sdk
      */
     public static void setAllowPowerOffAndRestart(Context context, boolean isEnabled) throws SecurityException {
-        EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().allowPowerOff(isEnabled);
+        //EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().allowPowerOff(isEnabled);
     }
 
     public static void reboot(Context context) throws SecurityException {
@@ -69,5 +69,13 @@ public class KnoxDeviceManager {
         }catch (Exception ex){
             return null;
         }
+    }
+
+    public static void startApp(Context context,String packageName,String className) {
+        EnterpriseDeviceManager.getInstance(context).getApplicationPolicy().startApp(packageName,className);
+    }
+
+    public static boolean stopApp(Context context,String packageName) {
+       return EnterpriseDeviceManager.getInstance(context).getApplicationPolicy().stopApp(packageName);
     }
 }

@@ -9,6 +9,7 @@
     <uses-permission android:name="com.samsung.android.knox.permission.KNOX_APP_MGMT" />
     <uses-permission android:name="com.example.supportlibclient.SUPPORT_PERMISSION" />
     <uses-permission android:name="com.samsung.android.knox.permission.KNOX_CONTAINER" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".application.App"
@@ -18,10 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".application.AppService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".RebootActivity"
             android:exported="true" />
-
         <activity android:name=".ActivateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
 
         <receiver
             android:name=".admin.AdminReceiver"

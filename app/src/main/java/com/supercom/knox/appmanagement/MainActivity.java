@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 import com.supercom.knox.appmanagement.admin.AdminReceiver;
+import com.supercom.knox.appmanagement.application.AppService;
 import com.supercom.knox.appmanagement.util.Constants;
 import com.supercom.knox.appmanagement.util.Utils;
 
@@ -66,6 +67,7 @@ ArrayList<String> messages;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         messages=new ArrayList<>();
+        AppService.start(getApplicationContext());
 
         TextView logView = findViewById(R.id.logview_id);
         logView.setMovementMethod(new ScrollingMovementMethod());

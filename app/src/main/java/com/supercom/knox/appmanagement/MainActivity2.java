@@ -46,6 +46,7 @@ import com.samsung.android.knox.application.ApplicationPolicy;
 import com.samsung.android.knox.license.EnterpriseLicenseManager;
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 import com.supercom.knox.appmanagement.admin.AdminReceiver;
+import com.supercom.knox.appmanagement.application.AppService;
 import com.supercom.knox.appmanagement.util.Constants;
 import com.supercom.knox.appmanagement.util.Utils;
 
@@ -82,6 +83,7 @@ public class MainActivity2 extends AppCompatActivity {
         //...called when the activity is starting. This is where most initialization should go.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_old);
+        AppService.start(getApplicationContext());
 
         TextView logView = findViewById(R.id.logview_id);
         logView.setMovementMethod(new ScrollingMovementMethod());

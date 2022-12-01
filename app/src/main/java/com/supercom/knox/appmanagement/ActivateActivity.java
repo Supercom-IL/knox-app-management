@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.supercom.knox.appmanagement.application.AppService;
+
 public class ActivateActivity extends AppCompatActivity implements StatusManager.StatusInterface {
 
     private final String TAG = "ActivateActivity";
@@ -98,6 +100,14 @@ Button btn_activate,btn_deactivate;
     }
 
     public void onDectivateClick(View view) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AppService.start(getApplicationContext());
 
     }
 }

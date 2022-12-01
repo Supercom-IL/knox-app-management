@@ -14,6 +14,11 @@ public class RebootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Timber.i("RebootReceiver onReceive()");
-        KnoxDeviceManager.reboot(context);
+
+        try {
+            KnoxDeviceManager.reboot(context);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 }
