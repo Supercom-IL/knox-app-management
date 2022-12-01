@@ -10,7 +10,7 @@ import com.supercom.knox.appmanagement.reboot.RebootReceiver;
 import timber.log.Timber;
 
 public class App extends Application {
-private final static boolean ignoreUSBBlock=true;
+private final static boolean ignoreUSBBlock=false;
     public static boolean isIgnoreUSBBlock() {
         return ignoreUSBBlock;
     }
