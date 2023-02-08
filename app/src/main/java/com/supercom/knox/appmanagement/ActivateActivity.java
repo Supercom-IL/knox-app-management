@@ -17,7 +17,7 @@ import com.supercom.knox.appmanagement.application.AppService;
 public class ActivateActivity extends AppCompatActivity implements StatusManager.StatusInterface {
 
     private final String TAG = "ActivateActivity";
-    CheckBox tv_admin,tv_activate, tv_usb,  tv_mobile_data_roaming;
+    CheckBox tv_admin,tv_activate, tv_usb,  tv_mobile_data_roaming,tv_camera;
     TextView tv_log;
 Button btn_activate,btn_deactivate;
     @Override
@@ -33,6 +33,7 @@ Button btn_activate,btn_deactivate;
         tv_activate=findViewById(R.id.tv_activate);
         tv_usb=findViewById(R.id.tv_usb);
         tv_mobile_data_roaming=findViewById(R.id.tv_mobile_data_roaming);
+        tv_camera=findViewById(R.id.tv_camera);
         btn_activate=findViewById(R.id.btn_activate);
         btn_deactivate=findViewById(R.id.btn_deactivate);
         tv_log = findViewById(R.id.tv_log);
@@ -82,10 +83,14 @@ Button btn_activate,btn_deactivate;
         btn_activate.setEnabled(!manager.isActiveLicense());
         btn_deactivate.setEnabled(false);//manager.isActiveLicense());
 
-        if (App.isIgnoreUSBBlock()) {
+        if (App.isIgnoreUSBBlock() ||  BuildConfig.DEBUG) {
             tv_usb.setEnabled(false);
             tv_usb.setChecked(false);
-            tv_usb.setText("\tDisabled USB Plugin not required");
+            if(BuildConfig.DEBUG) {
+                tv_usb.setText("\tEnabled USB for DEBUG mode");
+            }else{
+                tv_usb.setText("\tDisabled USB Plugin not required");
+            }
             Drawable img = ContextCompat.getDrawable(this, R.drawable.activate_not_required);
             img.setBounds(0, 0, 60, 60);
             tv_usb.setCompoundDrawables(img, null, null, null);
@@ -102,6 +107,9 @@ Button btn_activate,btn_deactivate;
 
         tv_mobile_data_roaming.setEnabled(manager.enabledMobileDataRoaming != null);
         tv_mobile_data_roaming.setChecked(manager.isDataRoamingEnabled());
+
+        tv_camera.setEnabled(manager.disabledCamera != null);
+        tv_camera.setChecked(manager.isCameraDisabled());
     }
 
     public void onActivateClick(View view) {

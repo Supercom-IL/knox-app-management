@@ -23,10 +23,12 @@ import java.util.Hashtable;
 public class AppService extends Service {
     String KeepRunningIntentAction="com.supercom.knox.appmanagement.application.AppService.KeepRunning";
     String RunningIntentAction="com.supercom.knox.appmanagement.application.AppService.Running";
+    private static String ACTION_LOG="com.supercom.puretrack.util.hardware.AppsSharedDataManager.log";
+
     static boolean isRunning;
     BroadcastReceiver appListener;
     Hashtable<String,AppData> nextKeepRunningAppIntent;
-String nextKeepRunningIntentObject="nextKeepRunningIntentObject";
+    String nextKeepRunningIntentObject="nextKeepRunningIntentObject";
 
     public AppService() {
         nextKeepRunningAppIntent=new Hashtable<>();
@@ -188,5 +190,14 @@ String nextKeepRunningIntentObject="nextKeepRunningIntentObject";
         } else {
             context.startService(new Intent(context, AppService.class));
         }
+    }
+
+
+    public static void log(Context context,String tag, String message,Boolean isError){
+        Intent intent = new  Intent(ACTION_LOG);
+        intent.putExtra("message",message);
+        intent.putExtra("isError",isError);
+        intent.putExtra("tag",tag);
+        context.sendBroadcast(intent);
     }
 }

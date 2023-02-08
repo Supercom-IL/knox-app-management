@@ -10,6 +10,7 @@ import com.samsung.android.knox.license.ActivationInfo;
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 import com.supercom.knox.appmanagement.admin.AdminReceiver;
 import com.supercom.knox.appmanagement.application.App;
+import com.supercom.knox.appmanagement.application.AppService;
 import com.supercom.knox.appmanagement.util.Constants;
 
 import java.util.ArrayList;
@@ -24,9 +25,9 @@ public class StatusManager {
     public Boolean activeLicense;
     public Boolean disabledUSBPort;
     public Boolean enabledMobileDataRoaming;
+    public Boolean disabledCamera;
 
     static final int DEVICE_ADMIN_ADD_RESULT_ENABLE = 1;
-
 
     public interface StatusInterface {
         void onStatusChange();
@@ -71,6 +72,8 @@ public class StatusManager {
                     disabledUSBPort = !KnoxDeviceManager.isUsbDebuggingEnabled(context);
                 }
                 enabledMobileDataRoaming = KnoxDeviceManager.isRoamingDataEnabled(context);
+
+                disabledCamera = !KnoxDeviceManager.isCameraEnabled(context);
             }
         } catch (Throwable t) {
             t.printStackTrace();
@@ -102,6 +105,10 @@ public class StatusManager {
         return disabledUSBPort != null && disabledUSBPort == false;
     }
 
+    public boolean isCameraDisabled() {
+        return disabledCamera != null && disabledCamera;
+    }
+
     public boolean isDataRoamingEnabled() {
         return enabledMobileDataRoaming != null && enabledMobileDataRoaming == true;
     }
@@ -118,16 +125,36 @@ public class StatusManager {
     }
 
     public void setActiveLicense(boolean enabled, String message) {
-        if ((activeLicense == null || !activeLicense) && enabled) {
-            configureDevice();
+        boolean currentStatus = (activeLicense == null || !activeLicense) && enabled;
+        activeLicense = enabled;
+
+        if (currentStatus) {
+            try {
+                if (!App.isIgnoreUSBBlock() && !BuildConfig.DEBUG) {
+                    disableUsbModes(context);
+                }
+                callOnStatusChange();
+                sleep(500);
+                setMobileDataRoamingState(context);
+                sleep(500);
+                disabledCamera = !KnoxDeviceManager.setCameraMode(context,false);
+                sleep(500);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        activeLicense = enabled;
         addMessage(message);
         addMessage("Device admin " + (enabled ? "enabled" : "Disabled"));
         callOnStatusChange();
     }
-
+    private void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     private void addMessage(String message) {
         messages.add(message);
     }
@@ -152,18 +179,6 @@ public class StatusManager {
         this.disabledUSBPort = true;
         callOnStatusChange();
         addMessage("Usb Ports are disabled!");
-    }
-
-    private void configureDevice() {
-        try {
-            if (!BuildConfig.DEBUG && !App.isIgnoreUSBBlock()) {
-                disableUsbModes(context);
-            }
-
-            setMobileDataRoamingState(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void disableUsbModes(Context context) {

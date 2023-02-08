@@ -27,6 +27,10 @@
         <activity
             android:name=".RebootActivity"
             android:exported="true" />
+        <activity
+            android:name=".WakeupActivity"
+            android:exported="true" />
+
         <activity android:name=".ActivateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -62,6 +66,14 @@
                 <action android:name="com.supercom.reboot" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".CameraReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.supercom.camera" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
