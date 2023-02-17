@@ -8,3 +8,4 @@
 .externalNativeBuild
 /kam_keystore.jks
 /app/release/KnoxAppManagement-release-build-v0.3.6(10).apk
+/app/release/output.json
