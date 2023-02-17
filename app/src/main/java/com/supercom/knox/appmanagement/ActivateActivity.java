@@ -19,7 +19,7 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
     private final String TAG = "ActivateActivity";
     CheckBox tv_admin,tv_activate, tv_usb,  tv_mobile_data_roaming,tv_camera;
     TextView tv_log;
-Button btn_activate,btn_deactivate;
+Button btn_activate,btn_deactivate,btn_reboot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +30,7 @@ Button btn_activate,btn_deactivate;
         StatusManager.getInstance(getApplicationContext()).setListener(this);
 
         tv_admin=findViewById(R.id.tv_admin);
+        btn_reboot=findViewById(R.id.btn_reboot);
         tv_activate=findViewById(R.id.tv_activate);
         tv_usb=findViewById(R.id.tv_usb);
         tv_mobile_data_roaming=findViewById(R.id.tv_mobile_data_roaming);
@@ -99,6 +100,8 @@ Button btn_activate,btn_deactivate;
             tv_usb.setChecked(manager.isUsbEnabled());
         }
 
+        btn_reboot.setVisibility(manager.isActiveLicense() ? View.VISIBLE : View.GONE);
+
         tv_admin.setEnabled(manager.adminEnabled != null);
         tv_admin.setChecked(manager.isAdminEnabled());
 
@@ -118,6 +121,10 @@ Button btn_activate,btn_deactivate;
 
     public void onDectivateClick(View view) {
 
+    }
+
+    public void onRebootClick(View view) {
+        startActivity(new Intent(getApplicationContext(),RebootActivity.class));
     }
 
     @Override
