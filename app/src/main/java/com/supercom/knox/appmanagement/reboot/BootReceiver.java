@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 
 import com.supercom.knox.appmanagement.KnoxDeviceManager;
 import com.supercom.knox.appmanagement.CameraReceiver;
+import com.supercom.knox.appmanagement.StateReceiver;
+import com.supercom.knox.appmanagement.application.App;
 
 import timber.log.Timber;
 
@@ -21,8 +23,7 @@ public class BootReceiver extends BroadcastReceiver {
             Timber.e("disable PowerOffAndRestart is failed: %s", e.getMessage());
         }
 
-        context.registerReceiver(new RebootReceiver(),new IntentFilter("com.supercom.reboot"));
-        context.registerReceiver(new CameraReceiver(),new IntentFilter("com.supercom.camera"));
+ App.registerToIntents(context);
     }
 }
 

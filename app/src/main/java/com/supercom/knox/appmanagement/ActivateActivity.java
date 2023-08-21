@@ -19,7 +19,7 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
     private final String TAG = "ActivateActivity";
     CheckBox tv_admin,tv_activate, tv_usb,  tv_mobile_data_roaming,tv_camera;
     TextView tv_log;
-Button btn_activate,btn_deactivate,btn_reboot;
+Button btn_activate,btn_deactivate,btn_reboot,btn_close;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +31,7 @@ Button btn_activate,btn_deactivate,btn_reboot;
 
         tv_admin=findViewById(R.id.tv_admin);
         btn_reboot=findViewById(R.id.btn_reboot);
+        btn_close=findViewById(R.id.btn_close);
         tv_activate=findViewById(R.id.tv_activate);
         tv_usb=findViewById(R.id.tv_usb);
         tv_mobile_data_roaming=findViewById(R.id.tv_mobile_data_roaming);
@@ -96,22 +97,23 @@ Button btn_activate,btn_deactivate,btn_reboot;
             img.setBounds(0, 0, 60, 60);
             tv_usb.setCompoundDrawables(img, null, null, null);
         } else {
-            tv_usb.setEnabled(manager.disabledUSBPort != null);
+            tv_usb.setEnabled(manager.state.disabledUSBPort != null);
             tv_usb.setChecked(manager.isUsbEnabled());
         }
 
         btn_reboot.setVisibility(manager.isActiveLicense() ? View.VISIBLE : View.GONE);
+        btn_close.setVisibility(btn_reboot.getVisibility());
 
-        tv_admin.setEnabled(manager.adminEnabled != null);
+        tv_admin.setEnabled(manager.state.adminEnabled != null);
         tv_admin.setChecked(manager.isAdminEnabled());
 
-        tv_activate.setEnabled(manager.activeLicense != null);
+        tv_activate.setEnabled(manager.state.activeLicense != null);
         tv_activate.setChecked(manager.isActiveLicense());
 
-        tv_mobile_data_roaming.setEnabled(manager.enabledMobileDataRoaming != null);
+        tv_mobile_data_roaming.setEnabled(manager.state.enabledMobileDataRoaming != null);
         tv_mobile_data_roaming.setChecked(manager.isDataRoamingEnabled());
 
-        tv_camera.setEnabled(manager.disabledCamera != null);
+        tv_camera.setEnabled(manager.state.disabledCamera != null);
         tv_camera.setChecked(manager.isCameraDisabled());
     }
 
@@ -121,6 +123,9 @@ Button btn_activate,btn_deactivate,btn_reboot;
 
     public void onDectivateClick(View view) {
 
+    }
+    public void onCloseClick(View view) {
+        finish();
     }
 
     public void onRebootClick(View view) {

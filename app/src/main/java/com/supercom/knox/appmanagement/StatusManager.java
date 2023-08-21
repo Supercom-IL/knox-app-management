@@ -21,11 +21,7 @@ public class StatusManager {
     private DevicePolicyManager devicePolicyManager;
     private ComponentName deviceAdmin;
     Context context;
-    public Boolean adminEnabled;
-    public Boolean activeLicense;
-    public Boolean disabledUSBPort;
-    public Boolean enabledMobileDataRoaming;
-    public Boolean disabledCamera;
+    public DeviceState state = new DeviceState();
 
     static final int DEVICE_ADMIN_ADD_RESULT_ENABLE = 1;
 
@@ -60,20 +56,20 @@ public class StatusManager {
 
     private void loadCurrentStatus() {
         if (devicePolicyManager.isAdminActive(deviceAdmin)) {
-            adminEnabled = true;
+            state.adminEnabled = true;
         }
         KnoxEnterpriseLicenseManager licenseManager = KnoxEnterpriseLicenseManager.getInstance(context);
 
         try {
             if (licenseManager.getLicenseActivationInfo().getState() == ActivationInfo.State.ACTIVE) {
-                activeLicense = true;
+                state.activeLicense = true;
 
                 if(KnoxDeviceManager.isUsbDebuggingEnabled(context)!= null) {
-                    disabledUSBPort = !KnoxDeviceManager.isUsbDebuggingEnabled(context);
+                    state.disabledUSBPort = !KnoxDeviceManager.isUsbDebuggingEnabled(context);
                 }
-                enabledMobileDataRoaming = KnoxDeviceManager.isRoamingDataEnabled(context);
+                state.enabledMobileDataRoaming = KnoxDeviceManager.isRoamingDataEnabled(context);
 
-                disabledCamera = !KnoxDeviceManager.isCameraEnabled(context);
+                state.disabledCamera = !KnoxDeviceManager.isCameraEnabled(context);
             }
         } catch (Throwable t) {
             t.printStackTrace();
@@ -82,51 +78,51 @@ public class StatusManager {
 
 
     public boolean isAdminEnabled() {
-        return adminEnabled != null && adminEnabled == true;
+        return  state.adminEnabled != null &&  state.adminEnabled == true;
     }
 
     public boolean isAdminDisabled() {
-        return adminEnabled != null && adminEnabled == false;
+        return  state.adminEnabled != null &&  state.adminEnabled == false;
     }
 
     public boolean isActiveLicense() {
-        return activeLicense != null && activeLicense == true;
+        return  state.activeLicense != null &&  state.activeLicense == true;
     }
 
     public boolean isInactiveLicense() {
-        return activeLicense != null && activeLicense == false;
+        return  state.activeLicense != null &&  state.activeLicense == false;
     }
 
     public boolean isUsbEnabled() {
-        return disabledUSBPort != null && disabledUSBPort == true;
+        return  state.disabledUSBPort != null &&  state.disabledUSBPort == true;
     }
 
     public boolean isUsbDisable() {
-        return disabledUSBPort != null && disabledUSBPort == false;
+        return  state.disabledUSBPort != null &&  state.disabledUSBPort == false;
     }
 
     public boolean isCameraDisabled() {
-        return disabledCamera != null && disabledCamera;
+        return  state.disabledCamera != null &&  state.disabledCamera;
     }
 
     public boolean isDataRoamingEnabled() {
-        return enabledMobileDataRoaming != null && enabledMobileDataRoaming == true;
+        return  state.enabledMobileDataRoaming != null &&  state.enabledMobileDataRoaming == true;
     }
 
     public boolean isDataRoamingDisable() {
-        return enabledMobileDataRoaming != null && enabledMobileDataRoaming == false;
+        return  state.enabledMobileDataRoaming != null &&  state.enabledMobileDataRoaming == false;
     }
 
     public void setAdminEnabled(boolean enabled) {
-        adminEnabled = enabled;
+        state.adminEnabled = enabled;
 
         callOnStatusChange();
         addMessage("Device admin " + (enabled ? "enabled" : "Disabled"));
     }
 
     public void setActiveLicense(boolean enabled, String message) {
-        boolean currentStatus = (activeLicense == null || !activeLicense) && enabled;
-        activeLicense = enabled;
+        boolean currentStatus = ( state.activeLicense == null || ! state.activeLicense) && enabled;
+        state.activeLicense = enabled;
 
         if (currentStatus) {
             try {
@@ -137,7 +133,7 @@ public class StatusManager {
                 sleep(500);
                 setMobileDataRoamingState(context);
                 sleep(500);
-                disabledCamera = !KnoxDeviceManager.setCameraMode(context,false);
+                state.disabledCamera = !KnoxDeviceManager.setCameraMode(context,false);
                 sleep(500);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -170,13 +166,13 @@ public class StatusManager {
     }
 
     public void enableMobileDataRoamingState() {
-        this.enabledMobileDataRoaming = true;
+        state.enabledMobileDataRoaming = true;
         callOnStatusChange();
         addMessage("Set 'data roaming state' enable!");
     }
 
     public void disabledUsbPort() {
-        this.disabledUSBPort = true;
+        state.disabledUSBPort = true;
         callOnStatusChange();
         addMessage("Usb Ports are disabled!");
     }

@@ -74,7 +74,7 @@ ArrayList<String> messages;
 
         deviceAdmin = new ComponentName(MainActivity.this, AdminReceiver.class);
         devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-        StatusManager.getInstance(getApplicationContext()).adminEnabled=devicePolicyManager.isAdminActive(deviceAdmin);
+        StatusManager.getInstance(getApplicationContext()).state.adminEnabled=devicePolicyManager.isAdminActive(deviceAdmin);
         StatusManager.getInstance(getApplicationContext()).setListener(this);
         utils = new Utils(logView, TAG);
 
@@ -148,19 +148,21 @@ ArrayList<String> messages;
         logview_id2.clearComposingText();
         logview_id2.setText("");
 
-        if (StatusManager.getInstance(getApplicationContext()).adminEnabled==true) {
+        DeviceState state = StatusManager.getInstance(getApplicationContext()).state;
+
+        if (state.adminEnabled!= null &&  state.adminEnabled==true) {
             logview_id2.append(getResources().getString(R.string.admin_activated));
         }else{
             logview_id2.append(getResources().getString(R.string.admin_inactivated));
         }
 
-        if(StatusManager.getInstance(getApplicationContext()).disabledUSBPort ==true){
+        if (state.disabledUSBPort!= null &&  state.disabledUSBPort==true) {
             logview_id2.append("Usb Port Modes: Mtp,Debugging,Tethering,Host Storage are disabled!");
         }else{
             logview_id2.append("Usb Port is enabled");
         }
 
-        if(StatusManager.getInstance(getApplicationContext()).enabledMobileDataRoaming ==true){
+        if (state.enabledMobileDataRoaming!= null &&  state.enabledMobileDataRoaming==true) {
             logview_id2.append("mobileDataRoaming is enabled");
         }else{
             logview_id2.append("mobileDataRoaming is disabled");

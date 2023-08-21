@@ -73,7 +73,13 @@
                 <action android:name="com.supercom.camera" />
             </intent-filter>
         </receiver>
-
+        <receiver
+            android:name=".StateReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.supercom.knox.askState" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

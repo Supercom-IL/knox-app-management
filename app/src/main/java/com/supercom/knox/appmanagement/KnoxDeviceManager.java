@@ -1,9 +1,13 @@
 package com.supercom.knox.appmanagement;
 
 import android.content.Context;
-import android.widget.Toast;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 
 import com.samsung.android.knox.EnterpriseDeviceManager;
+
+
 import com.supercom.knox.appmanagement.application.AppService;
 
 public class KnoxDeviceManager {
@@ -20,13 +24,15 @@ public class KnoxDeviceManager {
         EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().setUsbDebuggingEnabled(isEnabled);
         //utils.log("Usb Port Mode Debugging is: " + (isEnabled ? "enabled" : "disabled"));
     }
+
     public static Boolean isUsbDebuggingEnabled(Context context) {
         try {
             return EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isUsbDebuggingEnabled();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
+
     /*
      * enable or disable USB access
      * standard sdk
@@ -45,7 +51,7 @@ public class KnoxDeviceManager {
         //utils.log("Usb Port Mode Host Storage is: " + (isEnabled ? "enabled" : "disabled"));
     }
 
-    /*
+    /*1
      * allow or disallow the user to power off the device by pressing the power button.
      * standard sdk
      */
