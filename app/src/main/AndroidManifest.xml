@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.supercom.knox.appmanagement">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <permission
         android:name="com.example.supportlibclient.SUPPORT_PERMISSION"
@@ -31,7 +30,8 @@
             android:name=".WakeupActivity"
             android:exported="true" />
 
-        <activity android:name=".ActivateActivity">
+        <activity android:name=".ActivateActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,7 +44,8 @@
             android:name=".admin.AdminReceiver"
             android:description="@string/enterprise_device_admin_description"
             android:label="@string/enterprise_device_admin"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            android:permission="android.permission.BIND_DEVICE_ADMIN"
+            android:exported="true">
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/device_admin_receiver" />
@@ -53,7 +54,8 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver> <!-- Activate License TODO Provide receiver for Knox license activation results -->
-        <receiver android:name=".license.LicenseReceiver">
+        <receiver android:name=".license.LicenseReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.samsung.android.knox.intent.action.KNOX_LICENSE_STATUS" />
                 <action android:name="com.samsung.android.knox.intent.action.LICENSE_STATUS" />
