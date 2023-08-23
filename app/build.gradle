@@ -2,12 +2,19 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 31
+
+    def versionMajor = "2.0.0"
+    def versionMinor = 38
+    def versionPoint = 1
+    def versionDateCode = 230823111
+
     defaultConfig {
         applicationId "com.supercom.knox.appmanagement"
         minSdkVersion 26
         targetSdkVersion 31
-        versionCode 13
-        versionName "0.3.8"
+        versionCode versionDateCode
+        versionName "$versionMajor.$versionMinor.$versionPoint"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
