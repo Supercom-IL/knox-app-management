@@ -36,10 +36,6 @@ public class StatusManager {
         return _instance;
     }
 
-    public static StatusManager getInstance() {
-        return _instance;
-    }
-
     StatusInterface listener;
 
     public void setListener(StatusInterface listener) {
