@@ -4,9 +4,9 @@ android {
     compileSdkVersion 31
 
     def versionMajor = "2.0.0"
-    def versionMinor = 38
-    def versionPoint = 2
-    def versionDateCode = 230904101
+    def versionMinor = 41
+    def versionPoint = 1
+    def versionDateCode = 240110011
 
     defaultConfig {
         applicationId "com.supercom.knox.appmanagement"
