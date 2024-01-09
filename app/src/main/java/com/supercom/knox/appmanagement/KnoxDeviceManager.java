@@ -1,13 +1,12 @@
 package com.supercom.knox.appmanagement;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.samsung.android.knox.EnterpriseDeviceManager;
 
-
+import com.samsung.android.knox.custom.CustomDeviceManager;
+import com.samsung.android.knox.custom.SettingsManager;
 import com.supercom.knox.appmanagement.application.AppService;
 
 public class KnoxDeviceManager {
@@ -71,20 +70,21 @@ public class KnoxDeviceManager {
     public static void setMobileDataRoamingState(Context context, boolean isEnabled) throws SecurityException {
         EnterpriseDeviceManager.getInstance(context).getRoamingPolicy().setRoamingData(isEnabled);
     }
-    public static Boolean isRoamingDataEnabled(Context context)  {
+
+    public static Boolean isRoamingDataEnabled(Context context) {
         try {
             return EnterpriseDeviceManager.getInstance(context).getRoamingPolicy().isRoamingDataEnabled();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
-    public static void startApp(Context context,String packageName,String className) {
-        EnterpriseDeviceManager.getInstance(context).getApplicationPolicy().startApp(packageName,className);
+    public static void startApp(Context context, String packageName, String className) {
+        EnterpriseDeviceManager.getInstance(context).getApplicationPolicy().startApp(packageName, className);
     }
 
-    public static boolean stopApp(Context context,String packageName) {
-       return EnterpriseDeviceManager.getInstance(context).getApplicationPolicy().stopApp(packageName);
+    public static boolean stopApp(Context context, String packageName) {
+        return EnterpriseDeviceManager.getInstance(context).getApplicationPolicy().stopApp(packageName);
     }
 
     /*
@@ -96,10 +96,10 @@ public class KnoxDeviceManager {
             EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().setCameraState(isEnabled);
             boolean res = EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isCameraEnabled(false);
             String message = res ? "Knox allows access to the camera" : "Knox Prevents use of camera";
-            AppService.log(context,"Camera",message,false);
+            AppService.log(context, "Camera", message, false);
             return res;
         } catch (Exception e) {
-            AppService.log(context,"Camera",e.getMessage(),true);
+            AppService.log(context, "Camera", e.getMessage(), true);
             e.printStackTrace();
         }
         return true;
@@ -107,10 +107,52 @@ public class KnoxDeviceManager {
 
     public static boolean isCameraEnabled(Context context) {
         try {
-           return EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isCameraEnabled(false);
+            return EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isCameraEnabled(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    /*
+     * enable or disable AirplaneMode access
+     * standard sdk
+     */
+    public static boolean setAirplaneModeEnable(Context context, boolean isEnabled) {
+        try {
+            EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().allowAirplaneMode(isEnabled);
+            boolean res = EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isAirplaneModeAllowed();
+            String message = res ? "Allows access to the AirplaneMode" : "Knox Prevents use of AirplaneMode";
+            AppService.log(context, "Knox", message, false);
+            return res;
+        } catch (Exception e) {
+            AppService.log(context, "Knox", "setAirplaneModeEnable ERROR: "+e.getMessage(), true);
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public static boolean isAirplaneModeEnabled(Context context) {
+        try {
+            return EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isAirplaneModeAllowed();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public static void setAirplaneMode(Context context,boolean isEnabled) {
+        Log.i("YoadTest", "setAirplaneMode(" + isEnabled);
+        try {
+            CustomDeviceManager cdm = CustomDeviceManager.getInstance();
+            SettingsManager kcsm = cdm.getSettingsManager();
+            int res = kcsm.setFlightModeState(isEnabled ? CustomDeviceManager.ON : CustomDeviceManager.OFF);
+            String message =  "Set Airplane Mode to " +isEnabled +" result:"+res;
+            AppService.log(context, "Knox", message, false);
+            Log.i("YoadTest", "res:" + res);
+        } catch(SecurityException e) {
+            AppService.log(context, "Knox", "Set Airplane Mode ERROR: "+e.getMessage(), true);
+            e.printStackTrace();
+        }
     }
 }

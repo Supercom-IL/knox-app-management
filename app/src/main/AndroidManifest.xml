@@ -9,6 +9,11 @@
     <uses-permission android:name="com.example.supportlibclient.SUPPORT_PERMISSION" />
     <uses-permission android:name="com.samsung.android.knox.permission.KNOX_CONTAINER" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="com.samsung.android.knox.permission.KNOX_CUSTOM_SETTING" />
+    <uses-permission android:name="com.samsung.android.knox.permission.KNOX_RESTRICTION_MGMT" />
+    <uses-permission android:name="com.samsung.android.knox.permission.NOX_CUSTOM_PROKIOSK" />
+    <uses-permission android:name="com.samsung.android.knox.permission.KNOX_CUSTOM_SYSTEM" />
+
 
     <application
         android:name=".application.App"
@@ -75,6 +80,14 @@
                 <action android:name="com.supercom.camera" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".FlightModeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.supercom.fligh.mode" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".StateReceiver"
             android:exported="true">

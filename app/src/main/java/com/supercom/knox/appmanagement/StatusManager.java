@@ -10,7 +10,6 @@ import com.samsung.android.knox.license.ActivationInfo;
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
 import com.supercom.knox.appmanagement.admin.AdminReceiver;
 import com.supercom.knox.appmanagement.application.App;
-import com.supercom.knox.appmanagement.application.AppService;
 import com.supercom.knox.appmanagement.util.Constants;
 
 import java.util.ArrayList;
@@ -64,8 +63,9 @@ public class StatusManager {
                     state.disabledUSBPort = !KnoxDeviceManager.isUsbDebuggingEnabled(context);
                 }
                 state.enabledMobileDataRoaming = KnoxDeviceManager.isRoamingDataEnabled(context);
-
                 state.disabledCamera = !KnoxDeviceManager.isCameraEnabled(context);
+
+                state.disabledFlightMode = !KnoxDeviceManager.isAirplaneModeEnabled(context);
             }
         } catch (Throwable t) {
             t.printStackTrace();
@@ -100,7 +100,9 @@ public class StatusManager {
     public boolean isCameraDisabled() {
         return  state.disabledCamera != null &&  state.disabledCamera;
     }
-
+    public boolean isFlightModeDisabled() {
+        return  state.disabledFlightMode != null &&  state.disabledFlightMode;
+    }
     public boolean isDataRoamingEnabled() {
         return  state.enabledMobileDataRoaming != null &&  state.enabledMobileDataRoaming == true;
     }
@@ -121,15 +123,18 @@ public class StatusManager {
         state.activeLicense = enabled;
 
         if (currentStatus) {
+
             try {
                 if (!App.isIgnoreUSBBlock() && !BuildConfig.DEBUG) {
-                    disableUsbModes(context);
+                    setUsbModes(context,false);
                 }
                 callOnStatusChange();
                 sleep(500);
                 setMobileDataRoamingState(context);
                 sleep(500);
                 state.disabledCamera = !KnoxDeviceManager.setCameraMode(context,false);
+                sleep(500);
+                state.disabledFlightMode = !KnoxDeviceManager.setAirplaneModeEnable(context,false);
                 sleep(500);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -168,19 +173,21 @@ public class StatusManager {
     }
 
     public void disabledUsbPort() {
-        state.disabledUSBPort = true;
+        setDisabledUsbPort(true);
+    }
+    public void setDisabledUsbPort(boolean disabled) {
+        state.disabledUSBPort = disabled;
         callOnStatusChange();
-        addMessage("Usb Ports are disabled!");
+        addMessage("Usb Ports are "+ ((disabled) ? "disabled" : "enable")+"!");
     }
 
-    private void disableUsbModes(Context context) {
-        KnoxDeviceManager.setUsbPortModeDebugging(context, false);
-        KnoxDeviceManager.setUsbPortModeMtp(context, false);
-        KnoxDeviceManager.setUsbPortModeTethering(context, false);
-        KnoxDeviceManager.setUsbPortModeHostStorage(context, false);
-        StatusManager.getInstance(context).disabledUsbPort();
+    public void setUsbModes(Context context,boolean mode) {
+        KnoxDeviceManager.setUsbPortModeDebugging(context, mode);
+        KnoxDeviceManager.setUsbPortModeMtp(context, mode);
+        KnoxDeviceManager.setUsbPortModeTethering(context, mode);
+        KnoxDeviceManager.setUsbPortModeHostStorage(context, mode);
+        setDisabledUsbPort(!mode);
     }
-
     private void setMobileDataRoamingState(Context context) {
         KnoxDeviceManager.setMobileDataRoamingState(context, true);
         StatusManager.getInstance(context).enableMobileDataRoamingState();

@@ -6,14 +6,20 @@ public class DeviceState {
     public Boolean disabledUSBPort;
     public Boolean enabledMobileDataRoaming;
     public Boolean disabledCamera;
+    public Boolean disabledFlightMode;
 
     public String toJson(){
         return "{" +
-                "\"adminEnabled\":" +adminEnabled+","+
-                "\"activeLicense\":" +activeLicense+","+
-                "\"disabledUSBPort\":" +disabledUSBPort+","+
-                "\"enabledMobileDataRoaming\":" +enabledMobileDataRoaming+","+
-                "\"disabledCamera\":" +disabledCamera+
+                "\"adminEnabled\":" +isTrue(adminEnabled) +","+
+                "\"activeLicense\":" +isTrue(activeLicense)+","+
+                "\"disabledUSBPort\":" +isTrue(disabledUSBPort)+","+
+                "\"enabledMobileDataRoaming\":" +isTrue(enabledMobileDataRoaming)+","+
+                "\"disabledCamera\":" +isTrue(disabledCamera)+","+
+                "\"disabledFlightMode\":" +isTrue(disabledFlightMode)+
                 "}";
+    }
+
+    private boolean isTrue(Boolean b){
+        return b != null && b;
     }
 }

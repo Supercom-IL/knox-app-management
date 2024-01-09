@@ -27,7 +27,10 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
@@ -79,6 +82,18 @@ ArrayList<String> messages;
         utils = new Utils(logView, TAG);
 
         activateAdmin();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, "com.samsung.android.knox.permission.KNOX_CUSTOM_SETTING")
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{"com.samsung.android.knox.permission.KNOX_CUSTOM_SETTING"},
+                    123498);
+        }
     }
 
     /**

@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 
 import com.supercom.knox.appmanagement.BuildConfig;
 import com.supercom.knox.appmanagement.CameraReceiver;
+import com.supercom.knox.appmanagement.FlightModeReceiver;
 import com.supercom.knox.appmanagement.KnoxDeviceManager;
 import com.supercom.knox.appmanagement.StateReceiver;
 import com.supercom.knox.appmanagement.reboot.RebootReceiver;
@@ -30,6 +31,7 @@ public class App extends Application {
         registerToIntents(getApplicationContext());
         KnoxDeviceManager.setAllowPowerOffAndRestart(getApplicationContext(), false); // prevent the user from rebooting the device once the boot is completed
         KnoxDeviceManager.setCameraMode(getApplicationContext(), false);
+        KnoxDeviceManager.setAirplaneModeEnable(getApplicationContext(), false);
     }
 
     public void initTimber() {
@@ -42,8 +44,10 @@ public class App extends Application {
         if (registeredToIntents) return;
 
         registeredToIntents = true;
+
         context.registerReceiver(new RebootReceiver(), new IntentFilter("com.supercom.reboot"));
         context.registerReceiver(new CameraReceiver(), new IntentFilter("com.supercom.camera"));
+        context.registerReceiver(new FlightModeReceiver(), new IntentFilter("com.supercom.fligh.mode"));
         context.registerReceiver(new StateReceiver(), new IntentFilter("com.supercom.knox.askState"));
     }
 }

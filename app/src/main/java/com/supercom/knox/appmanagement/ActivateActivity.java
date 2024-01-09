@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.supercom.knox.appmanagement.application.App;
 import com.supercom.knox.appmanagement.application.AppService;
@@ -17,9 +18,10 @@ import com.supercom.knox.appmanagement.application.AppService;
 public class ActivateActivity extends AppCompatActivity implements StatusManager.StatusInterface {
 
     private final String TAG = "ActivateActivity";
-    CheckBox tv_admin,tv_activate, tv_usb,  tv_mobile_data_roaming,tv_camera;
+    CheckBox tv_admin, tv_activate, tv_usb, tv_mobile_data_roaming, tv_camera, tv_flightMode;
     TextView tv_log;
-Button btn_activate,btn_deactivate,btn_reboot,btn_close;
+    Button btn_activate, btn_deactivate, btn_reboot, btn_close;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,15 +31,16 @@ Button btn_activate,btn_deactivate,btn_reboot,btn_close;
 
         StatusManager.getInstance(getApplicationContext()).setListener(this);
 
-        tv_admin=findViewById(R.id.tv_admin);
-        btn_reboot=findViewById(R.id.btn_reboot);
-        btn_close=findViewById(R.id.btn_close);
-        tv_activate=findViewById(R.id.tv_activate);
-        tv_usb=findViewById(R.id.tv_usb);
-        tv_mobile_data_roaming=findViewById(R.id.tv_mobile_data_roaming);
-        tv_camera=findViewById(R.id.tv_camera);
-        btn_activate=findViewById(R.id.btn_activate);
-        btn_deactivate=findViewById(R.id.btn_deactivate);
+        tv_admin = findViewById(R.id.tv_admin);
+        btn_reboot = findViewById(R.id.btn_reboot);
+        btn_close = findViewById(R.id.btn_close);
+        tv_activate = findViewById(R.id.tv_activate);
+        tv_usb = findViewById(R.id.tv_usb);
+        tv_mobile_data_roaming = findViewById(R.id.tv_mobile_data_roaming);
+        tv_camera = findViewById(R.id.tv_camera);
+        tv_flightMode = findViewById(R.id.tv_flightMode);
+        btn_activate = findViewById(R.id.btn_activate);
+        btn_deactivate = findViewById(R.id.btn_deactivate);
         tv_log = findViewById(R.id.tv_log);
         tv_log.setMovementMethod(new ScrollingMovementMethod());
 
@@ -53,16 +56,16 @@ Button btn_activate,btn_deactivate,btn_reboot,btn_close;
     }
 
     private void activeApp() {
-        if(!StatusManager.getInstance(getApplicationContext()).isAdminEnabled()){
+        if (!StatusManager.getInstance(getApplicationContext()).isAdminEnabled()) {
             StatusManager.getInstance(getApplicationContext()).activateAdmin(ActivateActivity.this);
-        }else if(!StatusManager.getInstance(getApplicationContext()).isActiveLicense()){
+        } else if (!StatusManager.getInstance(getApplicationContext()).isActiveLicense()) {
             StatusManager.getInstance(getApplicationContext()).activateLicense();
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       StatusManager.getInstance(getApplicationContext()).onAddDeviceAdminActivityResult(requestCode,resultCode,data);
+        StatusManager.getInstance(getApplicationContext()).onAddDeviceAdminActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -85,12 +88,12 @@ Button btn_activate,btn_deactivate,btn_reboot,btn_close;
         btn_activate.setEnabled(!manager.isActiveLicense());
         btn_deactivate.setEnabled(false);//manager.isActiveLicense());
 
-        if (App.isIgnoreUSBBlock() ||  BuildConfig.DEBUG) {
+        if (App.isIgnoreUSBBlock() || BuildConfig.DEBUG) {
             tv_usb.setEnabled(false);
             tv_usb.setChecked(false);
-            if(BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
                 tv_usb.setText("\tEnabled USB for DEBUG mode");
-            }else{
+            } else {
                 tv_usb.setText("\tDisabled USB Plugin not required");
             }
             Drawable img = ContextCompat.getDrawable(this, R.drawable.activate_not_required);
@@ -100,6 +103,8 @@ Button btn_activate,btn_deactivate,btn_reboot,btn_close;
             tv_usb.setEnabled(manager.state.disabledUSBPort != null);
             tv_usb.setChecked(manager.isUsbEnabled());
         }
+
+        findViewById(R.id.btn_usb).setEnabled(BuildConfig.DEBUG);
 
         btn_reboot.setVisibility(manager.isActiveLicense() ? View.VISIBLE : View.GONE);
         btn_close.setVisibility(btn_reboot.getVisibility());
@@ -115,28 +120,38 @@ Button btn_activate,btn_deactivate,btn_reboot,btn_close;
 
         tv_camera.setEnabled(manager.state.disabledCamera != null);
         tv_camera.setChecked(manager.isCameraDisabled());
+
+        tv_flightMode.setEnabled(manager.state.disabledFlightMode != null);
+        tv_flightMode.setChecked(manager.isFlightModeDisabled());
     }
 
     public void onActivateClick(View view) {
         activeApp();
     }
 
-    public void onDectivateClick(View view) {
+    public void onDeactivateClick(View view) {
 
     }
+
     public void onCloseClick(View view) {
         finish();
     }
 
     public void onRebootClick(View view) {
-        startActivity(new Intent(getApplicationContext(),RebootActivity.class));
+        startActivity(new Intent(getApplicationContext(), RebootActivity.class));
+    }
+
+    public void onUSBClick(View view) {
+        StatusManager manager = StatusManager.getInstance(getApplicationContext());
+        boolean usbMode = manager.isUsbDisable();
+        StatusManager.getInstance(getApplicationContext()).setUsbModes(getApplicationContext(), usbMode);
+        Toast.makeText(this, "Usb" + (!usbMode ? "enabled" : "disabled"), Toast.LENGTH_LONG).show();
+        initUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         AppService.start(getApplicationContext());
-
     }
 }
