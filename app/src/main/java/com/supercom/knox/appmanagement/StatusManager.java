@@ -5,6 +5,8 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.samsung.android.knox.license.ActivationInfo;
 import com.samsung.android.knox.license.KnoxEnterpriseLicenseManager;
@@ -16,16 +18,40 @@ import java.util.ArrayList;
 
 public class StatusManager {
     public static StatusManager _instance;
+    public boolean useNewKey = true;
+    public String lastError="";
     ArrayList<String> messages;
     private DevicePolicyManager devicePolicyManager;
     private ComponentName deviceAdmin;
     Context context;
     public DeviceState state = new DeviceState();
+    public boolean enableDev;
 
     static final int DEVICE_ADMIN_ADD_RESULT_ENABLE = 1;
 
+    public boolean isEnableDev() {
+        return BuildConfig.DEBUG || enableDev;
+    }
+
+    public void switchLicenceToNewLicenceIfActivated() {
+        if(state.activeLicense == null || !state.activeLicense){
+            return;
+        }
+
+        if(isActivateByNewLicence()){
+            return;
+        }
+
+        useNewKey = true;
+        activateLicense();
+    }
+
     public interface StatusInterface {
         void onStatusChange();
+    }
+
+    private StatusManager(){
+
     }
 
     public static StatusManager getInstance(Context context) {
@@ -46,32 +72,47 @@ public class StatusManager {
         this.messages = new ArrayList<>();
         deviceAdmin = new ComponentName(context, AdminReceiver.class);
         devicePolicyManager = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
-        loadCurrentStatus();
+        loadCurrentStatus(false);
     }
 
-    private void loadCurrentStatus() {
+    public void loadCurrentStatus(boolean sendToServer) {
         if (devicePolicyManager.isAdminActive(deviceAdmin)) {
             state.adminEnabled = true;
         }
+
         KnoxEnterpriseLicenseManager licenseManager = KnoxEnterpriseLicenseManager.getInstance(context);
 
         try {
             if (licenseManager.getLicenseActivationInfo().getState() == ActivationInfo.State.ACTIVE) {
                 state.activeLicense = true;
+                state .isNewLicence = isActivateByNewLicence();
+                switchLicenceToNewLicenceIfActivated();
 
                 if(KnoxDeviceManager.isUsbDebuggingEnabled(context)!= null) {
                     state.disabledUSBPort = !KnoxDeviceManager.isUsbDebuggingEnabled(context);
                 }
                 state.enabledMobileDataRoaming = KnoxDeviceManager.isRoamingDataEnabled(context);
                 state.disabledCamera = !KnoxDeviceManager.isCameraEnabled(context);
-
                 state.disabledFlightMode = !KnoxDeviceManager.isAirplaneModeEnabled(context);
+                state.flightMode = KnoxDeviceManager.getAirplaneMode(context);
+
             }
         } catch (Throwable t) {
             t.printStackTrace();
         }
+
+        if(sendToServer){
+            sendState(context);
+        }
     }
 
+    public void sendState(Context context){
+        Intent i = new Intent("com.supercom.knox.state");
+        state.updateByKnoxTime = System.currentTimeMillis();
+        String json = StatusManager.getInstance(context).state.toJson();
+        i.putExtra("state",json);
+        context.sendBroadcast(i);
+    }
 
     public boolean isAdminEnabled() {
         return  state.adminEnabled != null &&  state.adminEnabled == true;
@@ -134,7 +175,8 @@ public class StatusManager {
                 sleep(500);
                 state.disabledCamera = !KnoxDeviceManager.setCameraMode(context,false);
                 sleep(500);
-                state.disabledFlightMode = !KnoxDeviceManager.setAirplaneModeEnable(context,false);
+                KnoxDeviceManager.setAirplaneModeEnable(context,false);
+                state.disabledFlightMode = !KnoxDeviceManager.isAirplaneModeEnabled(context);
                 sleep(500);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -164,6 +206,7 @@ public class StatusManager {
                 e.printStackTrace();
             }
         }
+        StatusManager.getInstance(context).loadCurrentStatus(true);
     }
 
     public void enableMobileDataRoamingState() {
@@ -227,11 +270,74 @@ public class StatusManager {
         return false;
     }
 
-    public void activateLicense() {
+    public String getLicenseData() {
+        KnoxEnterpriseLicenseManager licenseManager = KnoxEnterpriseLicenseManager.getInstance(context);
+        try {
+            ActivationInfo info = licenseManager.getLicenseActivationInfo();
+            String res = "key:"+info.getMaskedLicenseKey()+" state:"+info.getState();
+            Log.i("YoadTest","LicenseData: " + res);
+            return res;
+        } catch (Exception e) {
+            lastError = e.getMessage();
+            Log.e("YoadTest", "getLicenseData Error: "+e.getMessage());
+            return "";
+        }
+    }
+
+    public Boolean isActivateByNewLicence() {
+        KnoxEnterpriseLicenseManager licenseManager = KnoxEnterpriseLicenseManager.getInstance(context);
+        try {
+            ActivationInfo info = licenseManager.getLicenseActivationInfo();
+            String maskedLicenseKey = info.getMaskedLicenseKey();
+            int len = maskedLicenseKey.length();
+            String endKey = maskedLicenseKey.substring(len-5);
+            len = Constants.KPE_LICENSE_KEY.length();
+            String endNewKey = Constants.KPE_LICENSE_KEY.substring(len-5);
+            return endKey.equals(endNewKey);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean activateLicense() {
+        lastError="";
+        String key = useNewKey ? Constants.KPE_LICENSE_KEY : Constants.KPE_LICENSE_KEY_OLD;
+        String keyText = "Activate by " +(useNewKey ? "new" : "old")+" license";
+        Log.i("YoadTest", keyText);
+
         // Instantiate the KnoxEnterpriseLicenseManager class to use the activateLicense method
         KnoxEnterpriseLicenseManager licenseManager = KnoxEnterpriseLicenseManager.getInstance(context);
 
         // KPE License Activation TODO Add license key to Constants.java
-        licenseManager.activateLicense(Constants.KPE_LICENSE_KEY);
+        try {
+            licenseManager.activateLicense(key);
+            Log.i("YoadTest", "Activate success");
+            return true;
+        } catch (Exception e) {
+            lastError = e.getMessage();
+            Log.e("YoadTest", "Activate Error: "+e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deactivateLicense() {
+        lastError="";
+        String key = useNewKey ? Constants.KPE_LICENSE_KEY : Constants.KPE_LICENSE_KEY_OLD;
+        String keyText = "Deactivate by " +(useNewKey ? "new" : "old")+" license";
+        Log.i("YoadTest", keyText);
+
+        // Instantiate the KnoxEnterpriseLicenseManager class to use the activateLicense method
+        KnoxEnterpriseLicenseManager licenseManager = KnoxEnterpriseLicenseManager.getInstance(context);
+
+        // KPE License Activation TODO Add license key to Constants.java
+        try {
+            licenseManager.deActivateLicense(key);
+            Log.i("YoadTest", "Deactivate success");
+            return true;
+        } catch (Exception e) {
+            lastError = e.getMessage();
+            Log.e("YoadTest", "Deactivate Error: "+e.getMessage());
+            return false;
+        }
     }
 }

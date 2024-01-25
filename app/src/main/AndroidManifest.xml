@@ -13,7 +13,7 @@
     <uses-permission android:name="com.samsung.android.knox.permission.KNOX_RESTRICTION_MGMT" />
     <uses-permission android:name="com.samsung.android.knox.permission.NOX_CUSTOM_PROKIOSK" />
     <uses-permission android:name="com.samsung.android.knox.permission.KNOX_CUSTOM_SYSTEM" />
-
+    <uses-permission android:name="android.permission.READ_SETTINGS" />
 
     <application
         android:name=".application.App"
@@ -34,7 +34,9 @@
         <activity
             android:name=".WakeupActivity"
             android:exported="true" />
-
+        <activity
+            android:name=".DevActivity"
+            android:exported="true" />
         <activity android:name=".ActivateActivity"
             android:exported="true">
             <intent-filter>
@@ -43,7 +45,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
 
         <receiver
             android:name=".admin.AdminReceiver"

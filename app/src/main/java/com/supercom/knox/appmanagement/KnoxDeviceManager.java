@@ -10,6 +10,7 @@ import com.samsung.android.knox.custom.SettingsManager;
 import com.supercom.knox.appmanagement.application.AppService;
 
 public class KnoxDeviceManager {
+    public static String lastError = "";
     public static void setUsbPortModeMtp(Context context, boolean isEnabled) {
         EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().setUsbMediaPlayerAvailability(isEnabled);
         //utils.log("Usb Port Mode Mtp is: " + (isEnabled ? "enabled" : "disabled"));
@@ -92,14 +93,14 @@ public class KnoxDeviceManager {
      * standard sdk
      */
     public static boolean setCameraMode(Context context, boolean isEnabled) {
+        String message = isEnabled ? "Knox allows access to the camera" : "Knox Prevents use of camera";
         try {
             EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().setCameraState(isEnabled);
             boolean res = EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isCameraEnabled(false);
-            String message = res ? "Knox allows access to the camera" : "Knox Prevents use of camera";
             AppService.log(context, "Camera", message, false);
             return res;
         } catch (Exception e) {
-            AppService.log(context, "Camera", e.getMessage(), true);
+            AppService.log(context, "Camera", message+" ERROR: "+e.getMessage(), true);
             e.printStackTrace();
         }
         return true;
@@ -119,40 +120,68 @@ public class KnoxDeviceManager {
      * standard sdk
      */
     public static boolean setAirplaneModeEnable(Context context, boolean isEnabled) {
+        Log.i("YoadTest", "Set Airplane mode enable to " + isEnabled);
+        String message = isEnabled ? "Knox allows access and change Airplane Mode" : "Knox Prevents to set on Airplane Mode";
         try {
-            EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().allowAirplaneMode(isEnabled);
-            boolean res = EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isAirplaneModeAllowed();
-            String message = res ? "Allows access to the AirplaneMode" : "Knox Prevents use of AirplaneMode";
-            AppService.log(context, "Knox", message, false);
+            boolean res =  EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().allowAirplaneMode(isEnabled);
+            AppService.log(context, "Knox", message+ " result:"+res, false);
             return res;
         } catch (Exception e) {
-            AppService.log(context, "Knox", "setAirplaneModeEnable ERROR: "+e.getMessage(), true);
+            lastError = e.getMessage();
+            AppService.log(context, "Knox", message+" ERROR: "+e.getMessage(), true);
             e.printStackTrace();
+            Log.e("YoadTest","setAirplaneModeEnable ERROR: "+ e.getMessage());
+            return false;
         }
-        return true;
-    }
+     }
 
     public static boolean isAirplaneModeEnabled(Context context) {
         try {
             return EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isAirplaneModeAllowed();
         } catch (Exception e) {
+            lastError = e.getMessage();
             e.printStackTrace();
+            Log.e("YoadTest","isAirplaneModeEnabled ERROR: "+ e.getMessage());
         }
         return true;
     }
 
-    public static void setAirplaneMode(Context context,boolean isEnabled) {
-        Log.i("YoadTest", "setAirplaneMode(" + isEnabled);
+    public static boolean setAirplaneMode(Context context,boolean isEnabled) {
+        Log.i("YoadTest", "setAirplaneMode(" + isEnabled+")");
         try {
             CustomDeviceManager cdm = CustomDeviceManager.getInstance();
             SettingsManager kcsm = cdm.getSettingsManager();
             int res = kcsm.setFlightModeState(isEnabled ? CustomDeviceManager.ON : CustomDeviceManager.OFF);
-            String message =  "Set Airplane Mode to " +isEnabled +" result:"+res;
+            String message =  "Set Airplane Mode to " + getOnOffText(isEnabled) + " result:"+res;
             AppService.log(context, "Knox", message, false);
             Log.i("YoadTest", "res:" + res);
+            return true;
         } catch(SecurityException e) {
-            AppService.log(context, "Knox", "Set Airplane Mode ERROR: "+e.getMessage(), true);
+            lastError = e.getMessage();
+            AppService.log(context, "Knox", "Set Airplane Mode to "+getOnOffText(isEnabled)+" ERROR: "+e.getMessage(), true);
             e.printStackTrace();
+            Log.e("YoadTest","setAirplaneMode ERROR: "+ e.getMessage());
+            return  false;
         }
+    }
+
+    public static boolean getAirplaneMode(Context context) {
+        Log.i("YoadTest", "getAirplaneMode");
+        try {
+            int res = android.provider.Settings.Global.getInt(
+                    context.getContentResolver(),
+                    android.provider.Settings.Global.AIRPLANE_MODE_ON, 0);
+            Log.i("YoadTest", "res:" + res);
+            return res != 0;
+        } catch (SecurityException e) {
+            AppService.log(context, "Knox", "getAirplaneMode ERROR: " + e.getMessage(), true);
+            e.printStackTrace();
+            Log.e("YoadTest", "getAirplaneMode ERROR: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private static String getOnOffText(boolean enabled){
+        return enabled ? "ON" : "OFF";
     }
 }

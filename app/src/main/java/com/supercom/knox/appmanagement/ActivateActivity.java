@@ -20,7 +20,7 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
     private final String TAG = "ActivateActivity";
     CheckBox tv_admin, tv_activate, tv_usb, tv_mobile_data_roaming, tv_camera, tv_flightMode;
     TextView tv_log;
-    Button btn_activate, btn_deactivate, btn_reboot, btn_close;
+    Button btn_activate , btn_close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,6 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
         StatusManager.getInstance(getApplicationContext()).setListener(this);
 
         tv_admin = findViewById(R.id.tv_admin);
-        btn_reboot = findViewById(R.id.btn_reboot);
         btn_close = findViewById(R.id.btn_close);
         tv_activate = findViewById(R.id.tv_activate);
         tv_usb = findViewById(R.id.tv_usb);
@@ -40,7 +39,6 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
         tv_camera = findViewById(R.id.tv_camera);
         tv_flightMode = findViewById(R.id.tv_flightMode);
         btn_activate = findViewById(R.id.btn_activate);
-        btn_deactivate = findViewById(R.id.btn_deactivate);
         tv_log = findViewById(R.id.tv_log);
         tv_log.setMovementMethod(new ScrollingMovementMethod());
 
@@ -51,7 +49,9 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
             }
         });
 
-        activeApp();
+        if(!StatusManager.getInstance(getApplicationContext()).enableDev) {
+            activeApp();
+        }
         initUI();
     }
 
@@ -86,7 +86,6 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
         }
 
         btn_activate.setEnabled(!manager.isActiveLicense());
-        btn_deactivate.setEnabled(false);//manager.isActiveLicense());
 
         if (App.isIgnoreUSBBlock() || BuildConfig.DEBUG) {
             tv_usb.setEnabled(false);
@@ -104,10 +103,9 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
             tv_usb.setChecked(manager.isUsbEnabled());
         }
 
-        findViewById(R.id.btn_usb).setEnabled(BuildConfig.DEBUG);
+        findViewById(R.id.btn_dev).setEnabled(StatusManager.getInstance(getApplicationContext()).isEnableDev());
 
-        btn_reboot.setVisibility(manager.isActiveLicense() ? View.VISIBLE : View.GONE);
-        btn_close.setVisibility(btn_reboot.getVisibility());
+        btn_close.setVisibility(manager.isActiveLicense() ? View.VISIBLE : View.GONE);
 
         tv_admin.setEnabled(manager.state.adminEnabled != null);
         tv_admin.setChecked(manager.isAdminEnabled());
@@ -129,29 +127,25 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
         activeApp();
     }
 
-    public void onDeactivateClick(View view) {
-
+    public void onDevClick(View view) {
+        startActivity(new Intent(getApplicationContext(),DevActivity.class));
     }
 
     public void onCloseClick(View view) {
         finish();
     }
 
-    public void onRebootClick(View view) {
-        startActivity(new Intent(getApplicationContext(), RebootActivity.class));
-    }
-
-    public void onUSBClick(View view) {
-        StatusManager manager = StatusManager.getInstance(getApplicationContext());
-        boolean usbMode = manager.isUsbDisable();
-        StatusManager.getInstance(getApplicationContext()).setUsbModes(getApplicationContext(), usbMode);
-        Toast.makeText(this, "Usb" + (!usbMode ? "enabled" : "disabled"), Toast.LENGTH_LONG).show();
-        initUI();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+        try {
+            StatusManager.getInstance(getApplicationContext()).useNewKey = true;
+            StatusManager manager = StatusManager.getInstance(getApplicationContext());
+            manager.loadCurrentStatus(false);
+            initUI();
+        }catch ( Exception ex){
+
+        }
         AppService.start(getApplicationContext());
     }
 }

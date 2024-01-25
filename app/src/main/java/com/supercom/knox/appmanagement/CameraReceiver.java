@@ -32,9 +32,12 @@ public class CameraReceiver extends BroadcastReceiver {
 
         try {
             KnoxDeviceManager.setCameraMode(context, receiveEnabled);
+            StatusManager.getInstance(context).loadCurrentStatus(true);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void runDelay(Context context, boolean enabled, int delayInSeconds, long time) {
@@ -48,6 +51,7 @@ public class CameraReceiver extends BroadcastReceiver {
 
                 try {
                     KnoxDeviceManager.setCameraMode(context, enabled);
+                    StatusManager.getInstance(context).loadCurrentStatus(true);
                 } catch (SecurityException e) {
                     e.printStackTrace();
                 }

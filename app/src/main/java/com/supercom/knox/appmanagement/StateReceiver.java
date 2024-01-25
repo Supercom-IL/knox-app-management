@@ -13,9 +13,7 @@ public class StateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Timber.i("StateReceiver onReceive()");
-
-        Intent i = new Intent("com.supercom.knox.state");
-        i.putExtra("state",StatusManager.getInstance(context).state.toJson());
-        context.sendBroadcast(i);
+        StatusManager.getInstance(context).enableDev = intent.getBooleanExtra("EnableDevMode",false);
+        StatusManager.getInstance(context).loadCurrentStatus(true);
     }
 }

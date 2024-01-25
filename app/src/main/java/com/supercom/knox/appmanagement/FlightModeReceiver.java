@@ -38,13 +38,14 @@ public class FlightModeReceiver extends BroadcastReceiver {
 
     private void doRequest(Context context,boolean enabled) {
         try {
-            if (enabled) {
+             if (enabled) {
                 KnoxDeviceManager.setAirplaneModeEnable(context, true);
                 KnoxDeviceManager.setAirplaneMode(context,true);
             } else {
                 KnoxDeviceManager.setAirplaneMode(context,false);
                 KnoxDeviceManager.setAirplaneModeEnable(context, false);
             }
+            StatusManager.getInstance(context).loadCurrentStatus(true);
         } catch (SecurityException e) {
             AppService.log(context, "Knox", "FlightModeReceiver doRequest ERROR: "+e.getMessage(), true);
             e.printStackTrace();

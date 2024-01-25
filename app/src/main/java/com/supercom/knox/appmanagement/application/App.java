@@ -9,6 +9,7 @@ import com.supercom.knox.appmanagement.CameraReceiver;
 import com.supercom.knox.appmanagement.FlightModeReceiver;
 import com.supercom.knox.appmanagement.KnoxDeviceManager;
 import com.supercom.knox.appmanagement.StateReceiver;
+import com.supercom.knox.appmanagement.StatusManager;
 import com.supercom.knox.appmanagement.reboot.RebootReceiver;
 
 import timber.log.Timber;
@@ -31,7 +32,10 @@ public class App extends Application {
         registerToIntents(getApplicationContext());
         KnoxDeviceManager.setAllowPowerOffAndRestart(getApplicationContext(), false); // prevent the user from rebooting the device once the boot is completed
         KnoxDeviceManager.setCameraMode(getApplicationContext(), false);
+        KnoxDeviceManager.setAirplaneMode(getApplicationContext(), false);
         KnoxDeviceManager.setAirplaneModeEnable(getApplicationContext(), false);
+
+        StatusManager.getInstance(getApplicationContext()).loadCurrentStatus(true);
     }
 
     public void initTimber() {

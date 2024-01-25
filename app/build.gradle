@@ -5,8 +5,8 @@ android {
 
     def versionMajor = "2.0.0"
     def versionMinor = 41
-    def versionPoint = 1
-    def versionDateCode = 240110011
+    def versionPoint = 6
+    def versionDateCode = 240118171
 
     defaultConfig {
         applicationId "com.supercom.knox.appmanagement"
@@ -38,8 +38,8 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            def buildType = variant.name.replace("Debug", "-debug").replace("Release", "-release").toLowerCase()
-            outputFileName = "KnoxAppManagement-$buildType-build-v${variant.versionName}(${variant.versionCode}).apk"
+            def buildType = variant.name.replace("Debug", "-debug").replace("-release", "").replace("Release", "").toLowerCase()
+            outputFileName = "KnoxAppManagement$buildType-v${variant.versionName}(${variant.versionCode}).apk"
         }
     }
 }
