@@ -7,6 +7,12 @@
     android:background="#00000000"
     tools:context=".RebootActivity">
 
-
+<TextView
+    android:layout_width="match_parent"
+    android:text="Knox app management"
+    android:gravity="center"
+    android:textSize="45dp"
+    android:textColor="#909090"
+    android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>

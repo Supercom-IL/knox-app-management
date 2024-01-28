@@ -15,7 +15,7 @@ public class DeviceState {
 
     public String toJson(){
         return "{" +
-                "\"appVersion\":" +appVersion +","+
+                "\"appVersion\":\"" +appVersion +"\","+
                 "\"updateByKnoxTime\":" +updateByKnoxTime +","+
                 "\"adminEnabled\":" +isTrue(adminEnabled) +","+
                 "\"activeLicense\":" +isTrue(activeLicense)+","+
