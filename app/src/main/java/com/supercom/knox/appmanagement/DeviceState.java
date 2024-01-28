@@ -1,6 +1,8 @@
 package com.supercom.knox.appmanagement;
 
 public class DeviceState {
+    private static String appVersion = BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")";
+
     public long updateByKnoxTime;
     public Boolean adminEnabled;
     public Boolean activeLicense;
@@ -13,6 +15,7 @@ public class DeviceState {
 
     public String toJson(){
         return "{" +
+                "\"appVersion\":" +appVersion +","+
                 "\"updateByKnoxTime\":" +updateByKnoxTime +","+
                 "\"adminEnabled\":" +isTrue(adminEnabled) +","+
                 "\"activeLicense\":" +isTrue(activeLicense)+","+
