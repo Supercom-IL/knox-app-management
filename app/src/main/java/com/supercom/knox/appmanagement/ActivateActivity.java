@@ -139,7 +139,6 @@ public class ActivateActivity extends AppCompatActivity implements StatusManager
     protected void onResume() {
         super.onResume();
         try {
-            StatusManager.getInstance(getApplicationContext()).useNewKey = true;
             StatusManager manager = StatusManager.getInstance(getApplicationContext());
             manager.loadCurrentStatus(false);
             initUI();

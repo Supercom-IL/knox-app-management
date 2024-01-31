@@ -16,6 +16,11 @@ import timber.log.Timber;
 
 public class App extends Application {
     private final static boolean ignoreUSBBlock = false;
+    private static Context _context;
+
+    public static Context getContext() {
+        return _context;
+    }
 
     public static boolean isIgnoreUSBBlock() {
         return ignoreUSBBlock;
@@ -27,6 +32,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        _context = getApplicationContext();
+
         initTimber();
         AppService.start(getApplicationContext());
         registerToIntents(getApplicationContext());
@@ -35,7 +42,7 @@ public class App extends Application {
         KnoxDeviceManager.setAirplaneMode(getApplicationContext(), false);
         KnoxDeviceManager.setAirplaneModeEnable(getApplicationContext(), false);
 
-        StatusManager.getInstance(getApplicationContext()).loadCurrentStatus(true);
+         StatusManager.getInstance(getApplicationContext()).loadCurrentStatus(true);
     }
 
     public void initTimber() {

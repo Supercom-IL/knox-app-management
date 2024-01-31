@@ -20,7 +20,7 @@ import com.supercom.knox.appmanagement.application.AppService;
 public class DevActivity extends AppCompatActivity implements StatusManager.StatusInterface {
 
     private final String TAG = "ActivateActivity";
-    CheckBox tv_admin, tv_activate, tv_usb, tv_mobile_data_roaming, tv_camera, tv_flightMode,cb_key;
+    CheckBox tv_admin, tv_activate, tv_usb, tv_mobile_data_roaming, tv_camera, tv_flightMode;
     TextView tv_log;
     Button btn_activate, btn_deactivate, btn_reboot, btn_close;
 
@@ -33,7 +33,6 @@ public class DevActivity extends AppCompatActivity implements StatusManager.Stat
 
         StatusManager.getInstance(getApplicationContext()).setListener(this);
 
-        cb_key = findViewById(R.id.cb_key);
         tv_admin = findViewById(R.id.tv_admin);
         btn_reboot = findViewById(R.id.btn_reboot);
         btn_close = findViewById(R.id.btn_close);
@@ -47,13 +46,6 @@ public class DevActivity extends AppCompatActivity implements StatusManager.Stat
         tv_log = findViewById(R.id.tv_log);
         tv_log.setMovementMethod(new ScrollingMovementMethod());
 
-        cb_key.setChecked(StatusManager.getInstance(getApplicationContext()).useNewKey);
-        cb_key.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                StatusManager.getInstance(getApplicationContext()).useNewKey = b;
-            }
-        });
         findViewById(R.id.cb_click).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,7 +58,7 @@ public class DevActivity extends AppCompatActivity implements StatusManager.Stat
 
     private void activeApp() {
         StatusManager manager = StatusManager.getInstance(getApplicationContext());
-        String keyText = "Activate by " +(manager.useNewKey ? "new" : "old")+" license";
+        String keyText = "Activate by new license";
         if (!manager.isAdminEnabled()) {
             manager.activateAdmin(DevActivity.this);
             Toast.makeText(getApplicationContext(),"Set app admin first and " + keyText,Toast.LENGTH_SHORT ).show();
@@ -85,7 +77,7 @@ public class DevActivity extends AppCompatActivity implements StatusManager.Stat
 
     private void deactiveApp() {
         StatusManager manager = StatusManager.getInstance(getApplicationContext());
-        String keyText = "Deactivate by " + (manager.useNewKey ? "new" : "old") + " license";
+        String keyText = "Deactivate by new license";
 
         if(manager.deactivateLicense()){
             Toast.makeText(getApplicationContext(),keyText,Toast.LENGTH_SHORT ).show();
@@ -111,9 +103,7 @@ public class DevActivity extends AppCompatActivity implements StatusManager.Stat
         StatusManager manager = StatusManager.getInstance(getApplicationContext());
         manager.getLicenseData();
 
-        Boolean isNewLicence = StatusManager.getInstance(getApplicationContext()).isActivateByNewLicence();
-        String licenceText = isNewLicence == null ? "" : (" ("+(isNewLicence ? "New" : "Old")+")");
-        tv_activate .setText("\tActivate Knox Licence"+licenceText);
+        tv_activate .setText("\tActivate Knox Licence (New)");
         tv_log.clearComposingText();
         tv_log.setText("");
 
