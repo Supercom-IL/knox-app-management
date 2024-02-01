@@ -36,6 +36,7 @@ public class App extends Application {
         KnoxDeviceManager.setAirplaneModeEnable(getApplicationContext(), false);
 
         StatusManager.getInstance(getApplicationContext()).loadCurrentStatus(true);
+        StatusManager.getInstance(getApplicationContext()).activateLicenseIfRequired();
     }
 
     public void initTimber() {

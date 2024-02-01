@@ -6,7 +6,6 @@ public class DeviceState {
     public long updateByKnoxTime;
     public Boolean adminEnabled;
     public Boolean activeLicense;
-    public Boolean isNewLicence;
     public Boolean disabledUSBPort;
     public Boolean enabledMobileDataRoaming;
     public Boolean disabledCamera;
@@ -19,7 +18,7 @@ public class DeviceState {
                 "\"updateByKnoxTime\":" +updateByKnoxTime +","+
                 "\"adminEnabled\":" +isTrue(adminEnabled) +","+
                 "\"activeLicense\":" +isTrue(activeLicense)+","+
-                "\"isNewLicence\":" +isTrue(isNewLicence)+","+
+                "\"isNewLicence\":" +isTrue(activeLicense)+","+
                 "\"disabledUSBPort\":" +isTrue(disabledUSBPort)+","+
                 "\"enabledMobileDataRoaming\":" +isTrue(enabledMobileDataRoaming)+","+
                 "\"disabledCamera\":" +isTrue(disabledCamera)+","+

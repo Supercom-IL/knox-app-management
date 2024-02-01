@@ -12,6 +12,7 @@ public class StateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        StatusManager.getInstance(context).activateLicenseIfRequired();
         Timber.i("StateReceiver onReceive()");
         StatusManager.getInstance(context).enableDev = intent.getBooleanExtra("EnableDevMode",false);
         StatusManager.getInstance(context).loadCurrentStatus(true);

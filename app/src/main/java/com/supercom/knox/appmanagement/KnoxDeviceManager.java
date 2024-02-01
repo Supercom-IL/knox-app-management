@@ -115,6 +115,35 @@ public class KnoxDeviceManager {
         return true;
     }
 
+    public static boolean canChangeCameraMode(Context context) {
+        try {
+            boolean res = EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().isCameraEnabled(false);
+            res = EnterpriseDeviceManager.getInstance(context).getRestrictionPolicy().setCameraState(res);
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static boolean canSetAirplaneMode(Context context) {
+        try {
+            setAirplaneModeEnable(context, true);
+
+            CustomDeviceManager cdm = CustomDeviceManager.getInstance();
+            SettingsManager kcsm = cdm.getSettingsManager();
+            kcsm.setFlightModeState(CustomDeviceManager.OFF);
+            return true;
+        } catch (Exception e) {
+
+        } finally {
+            setAirplaneModeEnable(context, false);
+        }
+
+        return false;
+    }
+
     /*
      * enable or disable AirplaneMode access
      * standard sdk

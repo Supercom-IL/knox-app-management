@@ -114,12 +114,7 @@
        android:orientation="vertical"
        android:layout_height="wrap_content">
 
-<CheckBox android:id="@+id/cb_key"
-    android:layout_width="match_parent"
-    android:text="use new key for activation"
-    android:layout_height="wrap_content"/>
-
-   <LinearLayout
+      <LinearLayout
        android:layout_weight="1"
        android:layout_width="match_parent"
        android:orientation="horizontal"
