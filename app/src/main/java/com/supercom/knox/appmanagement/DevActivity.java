@@ -156,6 +156,21 @@ public class DevActivity extends AppCompatActivity implements StatusManager.Stat
     public void onCloseClick(View view) {
         finish();
     }
+    public void onTurnScreenOnClick(View view) {
+          Toast.makeText(getApplicationContext(),"Turn on screen in 6 seconds by "+"1"+" method",Toast.LENGTH_LONG).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(6000);
+                } catch (InterruptedException e) {
+
+                }
+
+                    KnoxDeviceManager.turnScreenOn(getApplicationContext());
+            }
+        }).start();
+    }
 
     public void onRebootClick(View view) {
         startActivity(new Intent(getApplicationContext(), RebootActivity.class));

@@ -146,7 +146,12 @@
           android:layout_width="match_parent"
           android:text="Close"
           android:layout_height="wrap_content"/>
-
+      <Button android:id="@+id/btn_turn_screen_on"
+          android:layout_weight="1"
+          android:onClick="onTurnScreenOnClick"
+          android:layout_width="match_parent"
+          android:text="turn screen on"
+          android:layout_height="wrap_content"/>
    </LinearLayout>
       <LinearLayout
           android:layout_weight="1"

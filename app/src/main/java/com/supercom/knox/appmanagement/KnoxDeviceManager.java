@@ -1,6 +1,9 @@
 package com.supercom.knox.appmanagement;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.samsung.android.knox.EnterpriseDeviceManager;
@@ -212,5 +215,26 @@ public class KnoxDeviceManager {
 
     private static String getOnOffText(boolean enabled){
         return enabled ? "ON" : "OFF";
+    }
+
+    public static void turnScreenOn(Context context) {
+        AppService.log(context, "Knox", "turn screen on", false);
+
+        PowerManager powerManager = (PowerManager)  context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK |
+                PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                PowerManager.ON_AFTER_RELEASE, "app:tag");
+
+        wakeLock.acquire(10*60*1000L /*10 minutes*/);
+
+        // Release the lock after a short period
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (wakeLock.isHeld()) {
+                    wakeLock.release();
+                }
+            }
+        }, 1000); // Adjust this value as needed
     }
 }

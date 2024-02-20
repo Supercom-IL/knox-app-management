@@ -10,6 +10,7 @@ import com.supercom.knox.appmanagement.FlightModeReceiver;
 import com.supercom.knox.appmanagement.KnoxDeviceManager;
 import com.supercom.knox.appmanagement.StateReceiver;
 import com.supercom.knox.appmanagement.StatusManager;
+import com.supercom.knox.appmanagement.TurnScreenOnReceiver;
 import com.supercom.knox.appmanagement.reboot.RebootReceiver;
 
 import timber.log.Timber;
@@ -54,5 +55,6 @@ public class App extends Application {
         context.registerReceiver(new CameraReceiver(), new IntentFilter("com.supercom.camera"));
         context.registerReceiver(new FlightModeReceiver(), new IntentFilter("com.supercom.fligh.mode"));
         context.registerReceiver(new StateReceiver(), new IntentFilter("com.supercom.knox.askState"));
+        context.registerReceiver(new TurnScreenOnReceiver(), new IntentFilter("com.supercom.turn.screen.on"));
     }
 }

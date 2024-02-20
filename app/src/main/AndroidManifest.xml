@@ -14,6 +14,7 @@
     <uses-permission android:name="com.samsung.android.knox.permission.NOX_CUSTOM_PROKIOSK" />
     <uses-permission android:name="com.samsung.android.knox.permission.KNOX_CUSTOM_SYSTEM" />
     <uses-permission android:name="android.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".application.App"
@@ -86,6 +87,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.supercom.fligh.mode" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".TurnScreenOnReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.supercom.turn.screen.on" />
             </intent-filter>
         </receiver>
 
