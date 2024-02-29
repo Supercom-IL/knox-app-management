@@ -225,7 +225,7 @@ public class KnoxDeviceManager {
                 PowerManager.ACQUIRE_CAUSES_WAKEUP |
                 PowerManager.ON_AFTER_RELEASE, "app:tag");
 
-        wakeLock.acquire(10*60*1000L /*10 minutes*/);
+        wakeLock.acquire(120*1000L);
 
         // Release the lock after a short period
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
