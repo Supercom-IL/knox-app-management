@@ -5,8 +5,8 @@ android {
 
     def versionMajor = "2.0.1"
     def versionMinor = 42
-    def versionPoint = 2
-    def versionDateCode = 240229101
+    def versionPoint = 3
+    def versionDateCode = 240229102
 
     defaultConfig {
         applicationId "com.supercom.knox.appmanagement"
